@@ -1,10 +1,5 @@
 import axios from "axios";
-import API from "../services/api";
-
-const API_BASE_URL = (
-  import.meta.env.VITE_API_URL || "http://localhost:5050/api"
-).replace(/\/$/, "");
-const API_ROOT_URL = API_BASE_URL.replace(/\/api$/, "");
+import API, { API_ROOT_URL } from "../services/api";
 
 const authHeaders = (accessToken) => ({
   Authorization: `Bearer ${accessToken}`,
