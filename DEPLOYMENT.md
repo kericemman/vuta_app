@@ -268,15 +268,6 @@ cd ../mobile
 npx tsc --noEmit
 ```
 
-Run backend smoke only against staging or a disposable test database:
-
-```bash
-cd backend
-npm run smoke
-```
-
-The smoke test writes users, services, bookings, messages, updates, feedback, reviews, and favourites.
-
 ## 8. Recommended Deploy Order
 
 1. Push cleaned monorepo to GitHub.

@@ -142,36 +142,6 @@ The seed is safe to run more than once. If the admin already exists by email
 or phone, the script updates that account, keeps it active, and marks it
 verified. The old `npm run create-admin` command is still available as an alias.
 
-Run the API smoke test:
-
-```text
-cd backend
-npm run smoke
-```
-
-The smoke test starts the API on a temporary local port, connects to MongoDB, then checks:
-
-```text
-admin login
-provider registration/login
-provider profile
-service creation
-provider approval
-provider discovery
-client registration
-booking request
-booking acceptance
-booking completion
-review creation
-favourite creation
-```
-
-To include a real Cloudinary portfolio upload in the smoke test, set:
-
-```text
-SMOKE_TEST_IMAGE_PATH=/absolute/path/to/image.jpg
-```
-
 ## Mobile App
 
 The mobile app uses Expo, TypeScript, Expo Router, SecureStore, Zustand, React
