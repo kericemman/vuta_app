@@ -3,13 +3,12 @@ import {
   FaInstagram,
   FaTiktok,
 } from "react-icons/fa";
-import { useState } from "react";
-import PartnershipModal from "./PartnershipModal";
 
 const footerLinks = [
-  { href: "#preview", label: "App Preview" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#waitlist", label: "Waitlist" },
+  { href: "/#preview", label: "App Preview" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/waitlist", label: "Waitlist" },
+  { href: "/become-a-partner", label: "Become a Partner" },
 ];
 
 const socialLinks = [
@@ -31,8 +30,6 @@ const socialLinks = [
 ];
 
 const Footer = () => {
-  const [partnershipOpen, setPartnershipOpen] = useState(false);
-
   return (
     <footer className="border-t border-[#F2D3BD] bg-[#211A20] px-5 py-12 text-white">
       <div className="mx-auto max-w-7xl">
@@ -61,13 +58,6 @@ const Footer = () => {
                   {link.label}
                 </a>
               ))}
-              <button
-                className="w-fit text-left text-sm font-bold text-[#F4B942] transition hover:text-[#F26B5E]"
-                onClick={() => setPartnershipOpen(true)}
-                type="button"
-              >
-                Become a Partner
-              </button>
             </div>
           </nav>
 
@@ -108,9 +98,6 @@ const Footer = () => {
           </p>
         </div>
       </div>
-      {partnershipOpen ? (
-        <PartnershipModal onClose={() => setPartnershipOpen(false)} />
-      ) : null}
     </footer>
   );
 };
