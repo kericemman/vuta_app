@@ -47,7 +47,7 @@ export default function WaitlistPage({
       />
       {status ? <ErrorText message={status} /> : null}
       <DataTable loading={loading}>
-        <table className="w-full min-w-[860px] border-collapse text-left text-sm">
+        <table className="w-full min-w-[980px] border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-[#EADBD3] text-xs uppercase tracking-wide text-[#746A71]">
               <th className="py-3 pr-4">Lead</th>
@@ -55,6 +55,7 @@ export default function WaitlistPage({
               <th className="py-3 pr-4">Location</th>
               <th className="py-3 pr-4">Service</th>
               <th className="py-3 pr-4">Joined</th>
+              <th className="py-3 pr-4">Consent</th>
               <th className="py-3 pr-4">Actions</th>
             </tr>
           </thead>
@@ -81,6 +82,18 @@ export default function WaitlistPage({
                 </td>
                 <td className="py-3 pr-4 text-[#746A71]">
                   {formatDate(entry.createdAt)}
+                </td>
+                <td className="py-3 pr-4 text-[#746A71]">
+                  {entry.legalConsent?.acceptedAt ? (
+                    <>
+                      <p className="text-xs font-bold text-[#211A20]">Accepted</p>
+                      <p className="text-xs">
+                        {formatDate(entry.legalConsent.acceptedAt)}
+                      </p>
+                    </>
+                  ) : (
+                    "N/A"
+                  )}
                 </td>
                 <td className="py-3 pr-4">
                   <IconButton

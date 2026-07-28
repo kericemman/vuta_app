@@ -3,6 +3,7 @@ const {
   PARTNERSHIP_STATUSES,
   PARTNERSHIP_TYPES,
 } = require("../constants/partnerships");
+const legalConsentSchema = require("./legalConsentSchema");
 
 const partnershipLeadSchema = new mongoose.Schema(
   {
@@ -62,6 +63,10 @@ const partnershipLeadSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    legalConsent: {
+      type: legalConsentSchema,
+      required: true,
+    },
   },
   { timestamps: true }
 );
@@ -69,6 +74,7 @@ const partnershipLeadSchema = new mongoose.Schema(
 partnershipLeadSchema.index({ createdAt: -1 });
 partnershipLeadSchema.index({ status: 1, createdAt: -1 });
 partnershipLeadSchema.index({ email: 1 });
+partnershipLeadSchema.index({ "legalConsent.email": 1 });
 partnershipLeadSchema.index({ partnershipType: 1 });
 
 module.exports = mongoose.model("PartnershipLead", partnershipLeadSchema);

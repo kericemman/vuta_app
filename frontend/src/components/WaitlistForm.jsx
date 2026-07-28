@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import API from "../services/api";
+import LegalConsentCheckbox from "./LegalConsentCheckbox";
 
 const initialState = {
+  acceptedLegalPolicies: false,
   name: "",
   email: "",
   phone: "",
@@ -28,9 +30,11 @@ export const WaitlistSignupForm = ({
   });
 
   const handleChange = (e) => {
+    const { checked, name, type, value } = e.target;
+
     setForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -89,6 +93,7 @@ export const WaitlistSignupForm = ({
           onChange={handleChange}
           type="email"
           placeholder="Email address"
+          required
           className={fieldClass}
         />
 
@@ -158,6 +163,12 @@ export const WaitlistSignupForm = ({
           placeholder="Which city should Vuta launch in first?"
           rows="4"
           className={`${fieldClass} md:col-span-2`}
+        />
+
+        <LegalConsentCheckbox
+          checked={form.acceptedLegalPolicies}
+          name="acceptedLegalPolicies"
+          onChange={handleChange}
         />
 
         {status.error && (

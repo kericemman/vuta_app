@@ -9,6 +9,7 @@ import Footer from "./components/Footer";
 import AdminDashboard from "./admin/AdminDashboard";
 import SEOHead from "./components/SEOHead";
 import { PartnershipForm } from "./components/PartnershipModal";
+import LegalPage from "./components/LegalPage";
 
 const seo = {
   home: {
@@ -34,6 +35,24 @@ const seo = {
     description:
       "Become a Vuta partner. Submit partnership requests for beauty brands, academies, suppliers, creators, media, corporate partners, and investors.",
     title: "Become a Partner",
+  },
+  privacy: {
+    canonical: "https://vuta.app/privacy-policy",
+    description:
+      "Read the Vuta Privacy Policy to understand how Vuta collects, uses, protects, and shares information for clients, professionals, and businesses.",
+    title: "Privacy Policy",
+  },
+  terms: {
+    canonical: "https://vuta.app/terms-and-conditions",
+    description:
+      "Read the Vuta Terms and Conditions for using Vuta websites, mobile apps, profiles, messaging, bookings, updates, and related services.",
+    title: "Terms and Conditions",
+  },
+  agreement: {
+    canonical: "https://vuta.app/user-agreement",
+    description:
+      "Read the Vuta User Agreement for clients, professionals, and businesses using Vuta to discover, promote, manage, message, or request beauty services.",
+    title: "User Agreement",
   },
 };
 
@@ -135,6 +154,14 @@ function PartnerPage() {
   );
 }
 
+function LegalRoutePage({ documentKey, page }) {
+  return (
+    <PublicShell page={page}>
+      <LegalPage documentKey={documentKey} />
+    </PublicShell>
+  );
+}
+
 function App() {
   const pathname =
     window.location.pathname.length > 1
@@ -155,6 +182,18 @@ function App() {
 
   if (pathname === "/become-a-partner") {
     return <PartnerPage />;
+  }
+
+  if (pathname === "/terms-and-conditions") {
+    return <LegalRoutePage documentKey="terms" page={seo.terms} />;
+  }
+
+  if (pathname === "/privacy-policy") {
+    return <LegalRoutePage documentKey="privacy" page={seo.privacy} />;
+  }
+
+  if (pathname === "/user-agreement") {
+    return <LegalRoutePage documentKey="agreement" page={seo.agreement} />;
   }
 
   return <HomePage />;

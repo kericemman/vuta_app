@@ -12,6 +12,12 @@ const footerLinks = [
   { href: "/become-a-partner", label: "Become a Partner" },
 ];
 
+const legalLinks = [
+  { href: "/terms-and-conditions", label: "Terms and Conditions" },
+  { href: "/privacy-policy", label: "Privacy Policy" },
+  { href: "/user-agreement", label: "User Agreement" },
+];
+
 const socialLinks = [
   {
     Icon: FaInstagram,
@@ -34,7 +40,7 @@ const Footer = () => {
   return (
     <footer className="border-t border-[#F2D3BD] bg-[#211A20] px-5 py-12 text-white">
       <div className="mx-auto max-w-7xl">
-        <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_1fr]">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.2fr_0.75fr_0.75fr_0.8fr]">
           <div className="max-w-md">
             <h2 className="inline-block text-3xl font-black text-white">
               Vuta
@@ -52,6 +58,23 @@ const Footer = () => {
             </p>
             <div className="mt-4 grid gap-3">
               {footerLinks.map((link) => (
+                <a
+                  className="text-sm text-[#FFF8F3]/75 transition hover:text-[#F26B5E]"
+                  href={link.href}
+                  key={link.href}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </nav>
+
+          <nav aria-label="Legal navigation">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#F4B942]">
+              Legal
+            </p>
+            <div className="mt-4 grid gap-3">
+              {legalLinks.map((link) => (
                 <a
                   className="text-sm text-[#FFF8F3]/75 transition hover:text-[#F26B5E]"
                   href={link.href}

@@ -77,7 +77,7 @@ export default function PartnershipsPage({
       />
       {status ? <ErrorText message={status} /> : null}
       <DataTable loading={loading}>
-        <table className="w-full min-w-[1180px] border-collapse text-left text-sm">
+        <table className="w-full min-w-[1280px] border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-[#EADBD3] text-xs uppercase tracking-wide text-[#746A71]">
               <th className="py-3 pr-4">Partner</th>
@@ -87,6 +87,7 @@ export default function PartnershipsPage({
               <th className="py-3 pr-4">Audience</th>
               <th className="py-3 pr-4">Message</th>
               <th className="py-3 pr-4">Submitted</th>
+              <th className="py-3 pr-4">Consent</th>
               <th className="py-3 pr-4">Actions</th>
             </tr>
           </thead>
@@ -155,6 +156,18 @@ export default function PartnershipsPage({
                 </td>
                 <td className="py-3 pr-4 align-top text-[#746A71]">
                   {formatDate(lead.createdAt)}
+                </td>
+                <td className="py-3 pr-4 align-top text-[#746A71]">
+                  {lead.legalConsent?.acceptedAt ? (
+                    <>
+                      <p className="text-xs font-bold text-[#211A20]">Accepted</p>
+                      <p className="text-xs">
+                        {formatDate(lead.legalConsent.acceptedAt)}
+                      </p>
+                    </>
+                  ) : (
+                    "N/A"
+                  )}
                 </td>
                 <td className="py-3 pr-4 align-top">
                   <div className="flex gap-2">

@@ -62,6 +62,13 @@ const optionalBoolean = z.preprocess((value) => {
   return value;
 }, z.boolean().optional());
 
+const requiredLegalConsent = z
+  .any()
+  .refine(
+    (value) => value === true || String(value).toLowerCase() === "true",
+    "You must accept the Terms and Conditions, Privacy Policy, and User Agreement."
+  );
+
 const paginationQuery = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
@@ -87,7 +94,7 @@ const authSchemas = {
   register: {
     body: z.object({
       name: nonEmptyString("Name is required.").max(80),
-      email: optionalEmail,
+      email: z.string().trim().toLowerCase().email("Email is invalid.").max(120),
       phone: nonEmptyString("Phone number is required.").max(30),
       password: z.string().min(8, "Password must be at least 8 characters."),
       role: z.enum(PUBLIC_SIGNUP_ROLES).default("client"),
@@ -569,6 +576,7 @@ const waitlistSchemas = {
       serviceOffered: optionalString,
       portfolioLink: optionalString,
       message: optionalString,
+      acceptedLegalPolicies: requiredLegalConsent,
     }),
   },
   list: {
@@ -592,6 +600,7 @@ const partnershipSchemas = {
       partnershipType: z.enum(PARTNERSHIP_TYPES),
       phone: optionalLimitedString(30),
       website: optionalUrl,
+      acceptedLegalPolicies: requiredLegalConsent,
     }),
   },
   adminList: {

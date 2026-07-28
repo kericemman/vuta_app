@@ -2,6 +2,7 @@ const { PARTNERSHIP_TYPES } = require("../constants/partnerships");
 const PartnershipLead = require("../models/PartnershipLead");
 const ApiError = require("../utils/ApiError");
 const asyncHandler = require("../utils/asyncHandler");
+const { buildLegalConsent } = require("../utils/legalConsent");
 const { buildPagination, getPagination } = require("../utils/pagination");
 const sendEmail = require("../utils/sendEmail");
 
@@ -30,7 +31,16 @@ const typeLabels = {
 };
 
 const createPartnershipLead = asyncHandler(async (req, res) => {
-  const lead = await PartnershipLead.create(req.body);
+  const payload = { ...req.body };
+  delete payload.acceptedLegalPolicies;
+
+  const lead = await PartnershipLead.create({
+    ...payload,
+    legalConsent: buildLegalConsent({
+      email: payload.email,
+      req,
+    }),
+  });
 
   await sendEmail({
     to: process.env.ADMIN_EMAIL,
@@ -47,6 +57,9 @@ const createPartnershipLead = asyncHandler(async (req, res) => {
       <p><strong>Type:</strong> ${escapeHtml(typeLabels[lead.partnershipType] || lead.partnershipType)}</p>
       <p><strong>Audience:</strong> ${escapeHtml(lead.audience || "Not provided")}</p>
       <p><strong>Message:</strong> ${escapeHtml(lead.message)}</p>
+      <p><strong>Legal Consent:</strong> Accepted Terms and Conditions, Privacy Policy, and User Agreement on ${escapeHtml(
+        lead.legalConsent.acceptedAt.toISOString()
+      )}</p>
     `,
   });
 

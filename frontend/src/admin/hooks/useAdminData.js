@@ -978,6 +978,10 @@ export function useAdminData() {
         "Service offered",
         "Portfolio",
         "Joined",
+        "Legal consent",
+        "Legal consent email",
+        "Legal consent accepted at",
+        "Legal document version",
       ],
       rows: filteredWaitlist.map((entry) => [
         entry.name,
@@ -989,6 +993,10 @@ export function useAdminData() {
         entry.serviceOffered,
         entry.portfolioLink,
         entry.createdAt,
+        entry.legalConsent?.accepted ? "Accepted" : "N/A",
+        entry.legalConsent?.email,
+        entry.legalConsent?.acceptedAt,
+        entry.legalConsent?.documents?.termsAndConditions?.version,
       ]),
     });
   };
@@ -1010,6 +1018,10 @@ export function useAdminData() {
         "Status",
         "Admin notes",
         "Submitted",
+        "Legal consent",
+        "Legal consent email",
+        "Legal consent accepted at",
+        "Legal document version",
       ],
       rows: filteredPartnerships.map((lead) => [
         lead.organizationName,
@@ -1025,6 +1037,10 @@ export function useAdminData() {
         lead.status,
         lead.adminNotes,
         lead.createdAt,
+        lead.legalConsent?.accepted ? "Accepted" : "N/A",
+        lead.legalConsent?.email,
+        lead.legalConsent?.acceptedAt,
+        lead.legalConsent?.documents?.termsAndConditions?.version,
       ]),
     });
   };

@@ -1,5 +1,6 @@
 const Waitlist = require("../models/Waitlist");
 const sendEmail = require("../utils/sendEmail");
+const { buildLegalConsent } = require("../utils/legalConsent");
 const { buildPagination, getPagination } = require("../utils/pagination");
 
 const escapeHtml = (value = "") =>
@@ -31,10 +32,11 @@ const joinWaitlist = async (req, res) => {
     const normalizedUserType =
       userType === "salon_owner" ? "beauty_business" : userType;
 
-    if (!name || !phone || !country || !location || !normalizedUserType) {
+    if (!name || !email || !phone || !country || !location || !normalizedUserType) {
       return res.status(400).json({
         success: false,
-        message: "Name, phone, country, location, and user type are required.",
+        message:
+          "Name, email, phone, country, location, and user type are required.",
       });
     }
 
@@ -59,6 +61,10 @@ const joinWaitlist = async (req, res) => {
       serviceOffered,
       portfolioLink,
       message,
+      legalConsent: buildLegalConsent({
+        email,
+        req,
+      }),
     });
 
     await sendEmail({
@@ -79,6 +85,9 @@ const joinWaitlist = async (req, res) => {
           portfolioLink || "N/A"
         )}</p>
         <p><strong>Message:</strong> ${escapeHtml(message || "N/A")}</p>
+        <p><strong>Legal Consent:</strong> Accepted Terms and Conditions, Privacy Policy, and User Agreement on ${escapeHtml(
+          waitlistEntry.legalConsent.acceptedAt.toISOString()
+        )}</p>
       `,
     });
 

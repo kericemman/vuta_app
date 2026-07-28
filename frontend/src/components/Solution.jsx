@@ -92,8 +92,6 @@ const Solution = () => {
                 One simple flow, shaped for each user.
               </h2>
             </div>
-
-            
           </div>
 
           <div className="mt-12 grid gap-5 lg:grid-cols-3">
@@ -103,7 +101,9 @@ const Solution = () => {
                 key={audience}
               >
                 <div className="flex items-center gap-3">
-                  
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-[#741B5D] shadow-sm">
+                    <Icon aria-hidden="true" />
+                  </div>
                   <div>
                     <p className="text-xs font-black uppercase tracking-[0.18em] text-[#F26B5E]">
                       Process

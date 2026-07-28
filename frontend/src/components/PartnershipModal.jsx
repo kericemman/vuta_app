@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { FaArrowRight, FaHandshake, FaTimes } from "react-icons/fa";
 import API from "../services/api";
+import LegalConsentCheckbox from "./LegalConsentCheckbox";
 
 const initialForm = {
+  acceptedLegalPolicies: false,
   audience: "",
   city: "",
   contactName: "",
@@ -38,9 +40,11 @@ export function PartnershipForm({ className = "", showHeader = true }) {
     "w-full rounded-lg border border-[#F2D3BD] bg-white px-4 py-3 text-sm text-[#211A20] outline-none transition placeholder:text-stone-400 focus:border-[#F26B5E] focus:shadow-sm";
 
   const handleChange = (event) => {
+    const { checked, name, type, value } = event.target;
+
     setForm((current) => ({
       ...current,
-      [event.target.name]: event.target.value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -172,6 +176,12 @@ export function PartnershipForm({ className = "", showHeader = true }) {
           required
           rows="5"
           value={form.message}
+        />
+
+        <LegalConsentCheckbox
+          checked={form.acceptedLegalPolicies}
+          name="acceptedLegalPolicies"
+          onChange={handleChange}
         />
 
         {status.error ? (

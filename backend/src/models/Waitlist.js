@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const legalConsentSchema = require("./legalConsentSchema");
 
 const waitlistSchema = new mongoose.Schema(
   {
@@ -9,6 +10,7 @@ const waitlistSchema = new mongoose.Schema(
     },
     email: {
       type: String,
+      required: true,
       trim: true,
       lowercase: true,
     },
@@ -44,12 +46,17 @@ const waitlistSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    legalConsent: {
+      type: legalConsentSchema,
+      required: true,
+    },
   },
   { timestamps: true }
 );
 
 waitlistSchema.index({ phone: 1 }, { unique: true });
 waitlistSchema.index({ email: 1 }, { unique: true, sparse: true });
+waitlistSchema.index({ "legalConsent.email": 1 });
 waitlistSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model("Waitlist", waitlistSchema);
