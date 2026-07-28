@@ -5,9 +5,10 @@ import {
 } from "react-icons/fa";
 
 const footerLinks = [
+  { href: "/#how", label: "How it Works" },
   { href: "/#preview", label: "App Preview" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/waitlist", label: "Waitlist" },
+  { href: "/waitlist", label: "Early Access" },
   { href: "/become-a-partner", label: "Become a Partner" },
 ];
 
@@ -39,8 +40,9 @@ const Footer = () => {
               Vuta
             </h2>
             <p className="mt-4 text-sm leading-7 text-[#FFF8F3]/75">
-              A beauty marketplace helping clients discover trusted
-              professionals and businesses across African cities.
+              Vuta brings trusted beauty closer for clients, professionals,
+              salons, spas, barbershops, and growing beauty teams across
+              African cities.
             </p>
           </div>
 

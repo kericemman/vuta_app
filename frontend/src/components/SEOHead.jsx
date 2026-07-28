@@ -39,7 +39,7 @@ export default function SEOHead({
   useEffect(() => {
     const fullTitle = title
       ? `${title} | Vuta`
-      : "Vuta | Africa's Beauty Platform";
+      : "Vuta | Trusted Beauty Closer";
 
     document.title = fullTitle;
     setLinkTag({ href: canonical, rel: "canonical" });

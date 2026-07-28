@@ -7,18 +7,18 @@ import {
 const painPoints = [
   {
     Icon: FaSearchLocation,
-    title: "Discovery is scattered",
-    copy: "Clients still rely on referrals, group chats, and screenshots when they need someone nearby and available.",
+    title: "Clients need clarity",
+    copy: "Finding the right stylist, barber, nail tech, makeup artist, spa, or salon should feel simple, local, and trusted.",
   },
   {
     Icon: FaImages,
-    title: "Proof of work is hard to compare",
-    copy: "Portfolios, prices, reviews, locations, and service styles often live in different places.",
+    title: "Professionals need proof",
+    copy: "Great work deserves a clean profile where clients can see services, prices, portfolios, reviews, and availability.",
   },
   {
     Icon: FaCalendarCheck,
-    title: "Booking is not structured",
-    copy: "Professionals lose time confirming services, dates, addresses, staff, and follow-ups manually.",
+    title: "Businesses need structure",
+    copy: "Salons, spas, and barbershops need one place to manage teams, services, bookings, updates, and client demand.",
   },
 ];
 
@@ -29,25 +29,25 @@ const Problem = () => {
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#F26B5E]">
-              The gap
+              What Vuta is
             </p>
 
-            <h2 className="mt-4 max-w-3xl text-3xl font-black leading-tight text-[#211A20] md:text-5xl">
-              Africa has beauty talent everywhere. Visibility is the bottleneck.
+            <h2 className="mt-4 max-w-3xl text-3xl font-black leading-tight text-[#211A20] md:text-4xl">
+              A simpler way for beauty clients and providers to meet.
             </h2>
           </div>
 
           <div className="max-w-2xl text-base leading-8 text-stone-700 md:text-lg">
             <p>
-              Across African cities, skilled stylists, barbers, nail techs,
-              makeup artists, spas, and salons already serve real demand. The
-              challenge is making that talent easy to find, trust, compare, and
-              book.
+              Vuta brings trusted beauty closer by helping people discover
+              nearby services, compare real work, message providers, and book
+              with confidence.
             </p>
             <p className="mt-4">
-              Vuta brings discovery, portfolios, location, service details, and
-              booking flow into one place so clients move with confidence and
-              providers grow with structure.
+              For providers, Vuta is a growth tool. It gives professionals and
+              businesses a modern place to show their work, manage requests, and
+              build repeat clients without depending only on screenshots,
+              referrals, and social media inboxes.
             </p>
           </div>
         </div>
@@ -68,8 +68,6 @@ const Problem = () => {
             </article>
           ))}
         </div>
-
-  
       </div>
     </section>
   );

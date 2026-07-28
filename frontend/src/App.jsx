@@ -14,20 +14,20 @@ const seo = {
   home: {
     canonical: "https://vuta.app/",
     description:
-      "Vuta is an African beauty marketplace for discovering trusted beauty professionals, salons, barbershops, spas, services, portfolios, prices, and bookings.",
-    title: "Africa's Beauty Platform",
+      "Vuta brings trusted beauty closer. Discover salons, barbers, makeup artists, nail techs, spa specialists, and beauty professionals around you.",
+    title: "Trusted Beauty Closer",
   },
   pricing: {
     canonical: "https://vuta.app/pricing",
     description:
-      "See Vuta pricing for clients, beauty professionals, and beauty businesses. Clients join free, professionals start at $5/month, and businesses start at $8/month.",
+      "See Vuta access plans for clients, beauty professionals, and beauty businesses. Clients join free, professionals start at $5/month, and businesses start at $8/month.",
     title: "Pricing",
   },
   waitlist: {
     canonical: "https://vuta.app/waitlist",
     description:
-      "Join the Vuta waitlist for early access to Africa's beauty marketplace for clients, professionals, salons, barbershops, and beauty businesses.",
-    title: "Join the Waitlist",
+      "Join the Vuta early access list for clients, professionals, salons, spas, barbershops, and beauty businesses across African cities.",
+    title: "Early Access",
   },
   partners: {
     canonical: "https://vuta.app/become-a-partner",
@@ -82,11 +82,11 @@ function HomePage() {
 function PricingPage() {
   return (
     <PublicShell page={seo.pricing}>
-      <PageIntro eyebrow="Vuta pricing" title="Simple packages for every beauty journey.">
-        Browse Vuta pricing for clients, independent professionals, and beauty
-        businesses preparing to grow with bookings, profiles, teams, and
-        marketplace visibility.
-      </PageIntro>
+      {/* <PageIntro eyebrow="Vuta pricing" title="Simple access for every beauty journey.">
+        Clients join free. Professionals and businesses choose plans built for
+        profiles, services, bookings, messaging, team tools, and growth insights
+        as Vuta opens city by city.
+      </PageIntro> */}
       <Pricing />
       <WaitlistForm />
     </PublicShell>
@@ -96,11 +96,11 @@ function PricingPage() {
 function WaitlistPage() {
   return (
     <PublicShell page={seo.waitlist}>
-      <PageIntro eyebrow="Early access" title="Join the Vuta waitlist.">
-        Tell us where you are, whether you are a client, beauty professional, or
-        business owner, and help Vuta prioritize the next African cities to
-        launch.
-      </PageIntro>
+      {/* <PageIntro eyebrow="Early access" title="Get notified when Vuta opens in your city.">
+        Join as a client, beauty professional, or business owner. Your response
+        helps Vuta prioritize launch cities, categories, and early provider
+        onboarding.
+      </PageIntro> */}
       <WaitlistForm />
       <Pricing />
     </PublicShell>

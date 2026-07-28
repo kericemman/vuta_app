@@ -17,6 +17,9 @@ const Navbar = () => {
         </a>
 
         <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
+          <a href="/#how" className="transition hover:text-[#F26B5E]">
+            How it works
+          </a>
           <a href="/#preview" className="transition hover:text-[#F26B5E]">
             Preview
           </a>
@@ -27,7 +30,7 @@ const Navbar = () => {
             Pricing
           </a>
           <a href="/waitlist" className="transition hover:text-[#F26B5E]">
-            Waitlist
+            Early Access
           </a>
         </nav>
 
@@ -35,7 +38,7 @@ const Navbar = () => {
           href="/waitlist"
           className="rounded-full bg-[#741B5D] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#F26B5E] hover:scale-[1.02]"
         >
-          Join Waitlist
+          Get Early Access
         </a>
       </div>
     </header>

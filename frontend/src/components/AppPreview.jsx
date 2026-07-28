@@ -53,15 +53,12 @@ const AppPreview = () => {
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#F26B5E]">
               App preview
             </p>
-            <h2 className="mt-4 text-3xl font-black leading-tight text-[#211A20] md:text-5xl">
-              See how Vuta feels for every account type.
+            <h2 className="mt-4 text-3xl font-black leading-tight text-[#211A20] md:text-4xl">
+              A Vuta experience for every side of the beauty journey.
             </h2>
           </div>
 
-          <p className="max-w-2xl text-lg leading-8 text-stone-700 lg:text-right">
-            Swipe on mobile to move through the client, professional, and
-            business previews.
-          </p>
+          
         </div>
 
         <div

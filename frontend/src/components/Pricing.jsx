@@ -5,7 +5,7 @@ const plans = [
     name: "Client",
     price: "$0",
     eyebrow: "For clients",
-    description: "Browse, compare, save, message, and request beauty bookings.",
+    description: "For people finding trusted beauty services around them.",
     popular: false,
     features: [
       "Free client account",
@@ -21,7 +21,7 @@ const plans = [
     name: "Professional",
     price: "$5 / month",
     eyebrow: "For solo providers",
-    description: "For beauty professionals who want visibility and bookings.",
+    description: "For independent providers growing their personal beauty brand.",
     popular: true,
     features: [
       "Professional profile",
@@ -37,7 +37,7 @@ const plans = [
     name: "Business",
     price: "$8 / month",
     eyebrow: "For salons and teams",
-    description: "For salons, barbershops, spas, and beauty businesses.",
+    description: "For beauty businesses managing teams, services, and demand.",
     popular: false,
     features: [
       "Business profile",
@@ -61,16 +61,12 @@ const Pricing = () => {
               Packages
             </p>
 
-            <h2 className="mt-4 text-3xl font-black leading-tight text-[#211A20] md:text-5xl">
-              Simple packages for clients, professionals, and beauty businesses.
+            <h2 className="mt-4 text-3xl font-black leading-tight text-[#211A20] md:text-4xl">
+              Simple access for clients, professionals, and businesses.
             </h2>
           </div>
 
-          <p className="max-w-2xl text-lg leading-8 text-stone-700">
-            Clients can use Vuta for free. Professionals and businesses get
-            paid tools to manage visibility, services, bookings, teams, and
-            growth as the marketplace expands.
-          </p>
+         
         </div>
 
         <div className="mt-12 flex flex-wrap gap-3">
@@ -143,10 +139,7 @@ const Pricing = () => {
           ))}
         </div>
 
-        <p className="mt-8 text-sm leading-7 text-stone-500">
-          Prices are shown in USD for early planning. Local currency billing may
-          be introduced as each country launches.
-        </p>
+        
       </div>
     </section>
   );
