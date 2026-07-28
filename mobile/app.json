@@ -1,0 +1,70 @@
+{
+  "expo": {
+    "name": "Vuta",
+    "slug": "vuta",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/vuta-logo.png",
+    "scheme": "vuta",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "bundleIdentifier": "app.vuta.mobile",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Allow Vuta to use your location to show beauty services, professionals, and businesses closest to you."
+      }
+    },
+    "android": {
+      "package": "app.vuta.mobile",
+      "adaptiveIcon": {
+        "backgroundColor": "#FFF8F3",
+        "foregroundImage": "./assets/vuta-logo.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "splash": {
+      "backgroundColor": "#FFF8F3",
+      "image": "./assets/vuta-logo.png",
+      "resizeMode": "contain"
+    },
+    "web": {
+      "favicon": "./assets/vuta-logo.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Vuta to access your photos so you can update your profile picture."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow Vuta to use your location to show beauty services, professionals, and businesses closest to you."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#741B5D"
+        }
+      ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "84696b6a-6bb7-4b07-9bad-d86fd6e1531e"
+      }
+    }
+  }
+}

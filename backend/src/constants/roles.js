@@ -1,0 +1,20 @@
+const ROLES = {
+  ADMIN: "admin",
+  CLIENT: "client",
+  BEAUTY_PROFESSIONAL: "beauty_professional",
+  BEAUTY_BUSINESS: "beauty_business",
+};
+
+const PUBLIC_SIGNUP_ROLES = [
+  ROLES.CLIENT,
+  ROLES.BEAUTY_PROFESSIONAL,
+  ROLES.BEAUTY_BUSINESS,
+];
+
+const PROVIDER_ROLES = [ROLES.BEAUTY_PROFESSIONAL, ROLES.BEAUTY_BUSINESS];
+
+module.exports = {
+  ROLES,
+  PUBLIC_SIGNUP_ROLES,
+  PROVIDER_ROLES,
+};

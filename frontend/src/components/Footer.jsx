@@ -1,41 +1,116 @@
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaTiktok,
+} from "react-icons/fa";
+import { useState } from "react";
+import PartnershipModal from "./PartnershipModal";
+
+const footerLinks = [
+  { href: "#preview", label: "App Preview" },
+  { href: "#pricing", label: "Pricing" },
+  { href: "#waitlist", label: "Waitlist" },
+];
+
+const socialLinks = [
+  {
+    Icon: FaInstagram,
+    href: "https://www.instagram.com/vuta.app?igsh=MTJ1NzVlbGdwa21jbg%3D%3D&utm_source=qr",
+    label: "Instagram",
+  },
+  {
+    Icon: FaTiktok,
+    href: "https://www.tiktok.com/@vuta.app?_r=1&_t=ZS-988HA9jUfmG",
+    label: "TikTok",
+  },
+  {
+    Icon: FaFacebookF,
+    href: "https://www.facebook.com/share/1D99iUbTHq/?mibextid=wwXIfr",
+    label: "Facebook",
+  },
+];
+
 const Footer = () => {
+  const [partnershipOpen, setPartnershipOpen] = useState(false);
+
   return (
-    <footer className="border-t border-orange-100 bg-white px-5 py-8">
+    <footer className="border-t border-[#F2D3BD] bg-[#211A20] px-5 py-12 text-white">
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
-          <div>
-            <h2 className="text-2xl font-black text-[#7C2D12] transition hover:text-[#F97316] hover:scale-[1.02] inline-block">
+        <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_1fr]">
+          <div className="max-w-md">
+            <h2 className="inline-block text-3xl font-black text-white">
               Vuta
             </h2>
-            <p className="mt-2 text-sm text-stone-600 transition hover:text-stone-900">
-              Beauty professionals across Africa.
+            <p className="mt-4 text-sm leading-7 text-[#FFF8F3]/75">
+              A beauty marketplace helping clients discover trusted
+              professionals and businesses across African cities.
             </p>
           </div>
 
-          <div className="flex flex-col gap-4 md:items-end">
-            <div className="flex gap-6">
-              <a href="#how" className="text-sm text-stone-500 transition hover:text-[#F97316]">
-                How it Works
-              </a>
-              <a href="#pricing" className="text-sm text-stone-500 transition hover:text-[#F97316]">
-                Pricing
-              </a>
-              <a href="#waitlist" className="text-sm text-stone-500 transition hover:text-[#F97316]">
-                Waitlist
-              </a>
-            </div>
-            <p className="text-sm text-stone-400 transition hover:text-stone-600">
-              © {new Date().getFullYear()} Vuta. All rights reserved.
+          <nav aria-label="Footer navigation">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#F4B942]">
+              Explore
             </p>
+            <div className="mt-4 grid gap-3">
+              {footerLinks.map((link) => (
+                <a
+                  className="text-sm text-[#FFF8F3]/75 transition hover:text-[#F26B5E]"
+                  href={link.href}
+                  key={link.href}
+                >
+                  {link.label}
+                </a>
+              ))}
+              <button
+                className="w-fit text-left text-sm font-bold text-[#F4B942] transition hover:text-[#F26B5E]"
+                onClick={() => setPartnershipOpen(true)}
+                type="button"
+              >
+                Become a Partner
+              </button>
+            </div>
+          </nav>
+
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#F4B942]">
+              Social
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              {socialLinks.map(({ Icon, href, label }) => (
+                <a
+                  aria-label={label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-[#FFF8F3] transition hover:border-[#F26B5E] hover:bg-[#F26B5E] hover:text-white"
+                  href={href}
+                  key={label}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  <Icon aria-hidden="true" />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-orange-100 text-center">
-          <p className="text-xs text-stone-400">
-            Building Africa's beauty economy, one city at a time. 🌍
+        <div className="mt-10 flex flex-col justify-between gap-4 border-t border-white/10 pt-6 text-sm text-[#FFF8F3]/65 md:flex-row md:items-center">
+          <p>© {new Date().getFullYear()} Vuta. All rights reserved.</p>
+          <p>
+            This app was built & maintained by{" "}
+            <a
+              className="font-semibold text-[#F4B942] transition hover:text-[#F26B5E]"
+              href="https://www.thedigitalagame.com"
+              rel="noreferrer"
+              target="_blank"
+            >
+              TDAG
+            </a>
+            .
           </p>
         </div>
       </div>
+      {partnershipOpen ? (
+        <PartnershipModal onClose={() => setPartnershipOpen(false)} />
+      ) : null}
     </footer>
   );
 };

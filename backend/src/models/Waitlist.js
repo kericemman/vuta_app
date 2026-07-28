@@ -17,6 +17,11 @@ const waitlistSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    country: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     location: {
       type: String,
       required: true,
@@ -24,7 +29,7 @@ const waitlistSchema = new mongoose.Schema(
     },
     userType: {
       type: String,
-      enum: ["client", "beauty_professional", "salon_owner"],
+      enum: ["client", "beauty_professional", "beauty_business"],
       required: true,
     },
     serviceOffered: {
@@ -42,5 +47,9 @@ const waitlistSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+waitlistSchema.index({ phone: 1 }, { unique: true });
+waitlistSchema.index({ email: 1 }, { unique: true, sparse: true });
+waitlistSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model("Waitlist", waitlistSchema);

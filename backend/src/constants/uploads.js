@@ -1,0 +1,12 @@
+const MAX_UPLOAD_BYTES = 12 * 1024 * 1024;
+const MAX_COMPRESSED_IMAGE_BYTES = 3 * 1024 * 1024;
+const MAX_PORTFOLIO_IMAGES = 8;
+
+const ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+module.exports = {
+  ALLOWED_IMAGE_MIME_TYPES,
+  MAX_COMPRESSED_IMAGE_BYTES,
+  MAX_PORTFOLIO_IMAGES,
+  MAX_UPLOAD_BYTES,
+};

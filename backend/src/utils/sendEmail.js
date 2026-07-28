@@ -1,6 +1,18 @@
 const { Resend } = require("resend");
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resend;
+
+const getResendClient = () => {
+  if (!process.env.RESEND_API_KEY) {
+    return null;
+  }
+
+  if (!resend) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+
+  return resend;
+};
 
 const sendEmail = async ({ to, subject, html }) => {
   if (!process.env.RESEND_API_KEY) {
@@ -8,7 +20,14 @@ const sendEmail = async ({ to, subject, html }) => {
     return;
   }
 
-  await resend.emails.send({
+  if (!process.env.RESEND_FROM_EMAIL || !to) {
+    console.log("Email recipient or sender missing. Email skipped.");
+    return;
+  }
+
+  const client = getResendClient();
+
+  await client.emails.send({
     from: process.env.RESEND_FROM_EMAIL,
     to,
     subject,

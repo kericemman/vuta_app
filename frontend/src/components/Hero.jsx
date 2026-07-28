@@ -1,79 +1,69 @@
+import heroAfricanBeauty from "../assets/hero-african-beauty.jpg";
+
 const Hero = () => {
   return (
-    <section className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-20 md:grid-cols-2 md:py-28">
-      <div>
-        <p className="mb-4 inline-flex rounded-full bg-orange-100 px-4 py-2 text-sm font-semibold text-[#7C2D12]">
-          Building for Africa’s beauty economy
-        </p>
+    <section className="relative min-h-[78svh] overflow-hidden bg-[#211A20] md:min-h-[82svh]">
+      <img
+        src={heroAfricanBeauty}
+        alt="African hairstylists, makeup artists, nail technicians, and barbers serving clients in a modern beauty studio"
+        className="absolute inset-0 h-full w-full object-cover object-[58%_center]"
+      />
 
-        <h1 className="max-w-3xl text-3xl font-black leading-tight tracking-tight text-[#1C1917] md:text-7xl">
-          Find Beauty Professionals Across Africa
-        </h1>
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(33,26,32,0.92)_0%,rgba(116,27,93,0.72)_38%,rgba(33,26,32,0.16)_74%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-[linear-gradient(0deg,#FFF8F3_0%,rgba(255,248,243,0)_100%)]" />
 
-        <p className="mt-6 max-w-xl text-l leading-8 text-stone-700">
-          Vuta connects clients with trusted hairstylists, barbers, nail techs,
-          makeup artists, and beauty professionals in their country and city.
-          Browse real work, compare prices, and book directly.
-        </p>
-
-        <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-          <a
-            href="#waitlist"
-            className="rounded-full bg-[#7C2D12] px-8 py-4 text-center font-light text-white transition hover:bg-[#F97316] hover:scale-[1.02]"
-          >
-            Join the Waitlist
-          </a>
-
-          <a
-            href="#pricing"
-            className="rounded-full border border-[#7C2D12] px-8 py-4 text-center font-light text-[#7C2D12] transition hover:bg-[#7C2D12] hover:text-white hover:scale-[1.02]"
-          >
-            See Early Pricing
-          </a>
-        </div>
-
-        <p className="mt-5 text-sm text-stone-600">
-          Launching first in selected African cities, then expanding country by
-          country.
-        </p>
-      </div>
-
-      <div className="relative rounded-[2rem] bg-white p-4 shadow-2xl transition hover:shadow-xl">
-        <div className="absolute -top-3 -right-3 h-24 w-24 rounded-full bg-[#F97316]/20 blur-2xl"></div>
-        <div className="absolute -bottom-3 -left-3 h-32 w-32 rounded-full bg-[#7C2D12]/10 blur-2xl"></div>
-        
-        <img 
-          src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=600&h=500&fit=crop" 
-          alt="Beauty professional styling hair"
-          className="h-64 w-full rounded-2xl object-cover md:h-80"
-        />
-        
-        <div className="mt-4 grid grid-cols-3 gap-3">
-          <img 
-            src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=200&h=150&fit=crop" 
-            alt="Nail art"
-            className="h-20 w-full rounded-xl object-cover transition hover:scale-[1.02]"
-          />
-          <img 
-            src="https://images.unsplash.com/photo-1560869713-7d0a2943084e?w=200&h=150&fit=crop" 
-            alt="Barber cutting hair"
-            className="h-20 w-full rounded-xl object-cover transition hover:scale-[1.02]"
-          />
-          <img 
-            src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=200&h=150&fit=crop" 
-            alt="Makeup application"
-            className="h-20 w-full rounded-xl object-cover transition hover:scale-[1.02]"
-          />
-        </div>
-
-        <div className="mt-4 flex items-center gap-2 rounded-xl bg-[#FFF7ED] p-3">
-          <div className="flex -space-x-2">
-            <div className="h-8 w-8 rounded-full border-2 border-white bg-[#F97316] flex items-center justify-center text-xs font-bold text-white">⭐</div>
-            <div className="h-8 w-8 rounded-full border-2 border-white bg-[#7C2D12] flex items-center justify-center text-xs font-bold text-white">✨</div>
-          </div>
-          <p className="text-sm font-medium text-[#1C1917]">
-            <span className="font-bold">500+</span> beauty professionals joining monthly
+      <div className="relative mx-auto flex min-h-[78svh] max-w-7xl items-center px-5 py-16 md:min-h-[82svh] md:py-20">
+        <div className="max-w-2xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#F4B942]">
+            Built for Africa's beauty economy
           </p>
+
+          <h1 className="mt-5 max-w-3xl text-4xl font-black leading-[1.02] text-white md:text-7xl">
+            Vuta helps clients find beauty talent nearby.
+          </h1>
+
+          <p className="mt-6 max-w-xl text-base leading-8 text-[#FFF8F3] md:text-lg">
+            Discover trusted hairstylists, barbers, makeup artists, nail techs,
+            spas, and beauty businesses by city, service, portfolio, price, and
+            availability.
+          </p>
+
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <a
+              href="#waitlist"
+              className="rounded-full bg-[#F26B5E] px-8 py-4 text-center text-sm font-semibold text-white transition hover:bg-[#F4B942] hover:text-[#211A20]"
+            >
+              Join the Waitlist
+            </a>
+
+            <a
+              href="#preview"
+              className="rounded-full border border-white/55 px-8 py-4 text-center text-sm font-semibold text-white transition hover:border-[#F4B942] hover:bg-white/10"
+            >
+              Preview the App
+            </a>
+          </div>
+
+          <dl className="mt-10 grid max-w-xl grid-cols-3 gap-5 border-t border-white/20 pt-6 text-white">
+            <div>
+              <dt className="text-2xl font-black">6+</dt>
+              <dd className="mt-1 text-xs leading-5 text-[#FFF8F3]/80">
+                Beauty categories
+              </dd>
+            </div>
+            <div>
+              <dt className="text-2xl font-black">3</dt>
+              <dd className="mt-1 text-xs leading-5 text-[#FFF8F3]/80">
+                Account types
+              </dd>
+            </div>
+            <div>
+              <dt className="text-2xl font-black">24/7</dt>
+              <dd className="mt-1 text-xs leading-5 text-[#FFF8F3]/80">
+                Service discovery
+              </dd>
+            </div>
+          </dl>
         </div>
       </div>
     </section>
