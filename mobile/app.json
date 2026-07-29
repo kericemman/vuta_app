@@ -15,6 +15,7 @@
       "bundleIdentifier": "app.vuta.mobile",
       "supportsTablet": true,
       "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
         "NSLocationWhenInUseUsageDescription": "Allow Vuta to use your location to show beauty services, professionals, and businesses closest to you."
       }
     },
