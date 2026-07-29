@@ -1,4 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
+import type { TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import { BrandLogo } from "./BrandLogo";
 import { PrimaryButton } from "./PrimaryButton";
@@ -12,11 +14,11 @@ type SafeModeScreenProps = {
   security: AppSecurityConfig;
 };
 
-const getTitle = (mode: AppSecurityConfig["mode"]) => {
-  if (mode === "force_update") return "Update required";
-  if (mode === "incident_lockdown") return "Accounts protected";
-  if (mode === "read_only") return "Read-only mode";
-  return "Vuta is protecting the platform";
+const getTitle = (mode: AppSecurityConfig["mode"], t: TFunction) => {
+  if (mode === "force_update") return t("safeMode.updateRequired");
+  if (mode === "incident_lockdown") return t("safeMode.accountsProtected");
+  if (mode === "read_only") return t("safeMode.readOnly");
+  return t("safeMode.platformProtected");
 };
 
 export function SafeModeScreen({
@@ -25,6 +27,8 @@ export function SafeModeScreen({
   onRetry,
   security,
 }: SafeModeScreenProps) {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
       <View style={styles.card}>
@@ -32,17 +36,18 @@ export function SafeModeScreen({
         <View style={styles.iconBadge}>
           <Ionicons color={colors.primary} name="shield-checkmark" size={30} />
         </View>
-        <Text style={styles.title}>{getTitle(security.mode)}</Text>
+        <Text style={styles.title}>{getTitle(security.mode, t)}</Text>
         <Text style={styles.body}>
-          {security.message ||
-            "Some Vuta services are temporarily paused while our team keeps accounts safe."}
+          {security.message || t("safeMode.defaultMessage")}
         </Text>
         {security.incidentId ? (
-          <Text style={styles.meta}>Incident ID: {security.incidentId}</Text>
+          <Text style={styles.meta}>
+            {t("safeMode.incidentId", { id: security.incidentId })}
+          </Text>
         ) : null}
         {error ? <Text style={styles.error}>{error}</Text> : null}
         <PrimaryButton
-          label={isLoading ? "Checking..." : "Check again"}
+          label={isLoading ? t("actions.checking") : t("actions.checkAgain")}
           loading={isLoading}
           onPress={onRetry}
         />

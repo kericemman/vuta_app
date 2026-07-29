@@ -70,6 +70,12 @@ const userSchema = new mongoose.Schema(
         maxlength: 80,
       },
     ],
+    language: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      maxlength: 8,
+    },
     isVerified: {
       type: Boolean,
       default: true,

@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 import { LoadingScreen } from "../../src/components/LoadingScreen";
 import { colors } from "../../src/constants/theme";
@@ -7,6 +8,7 @@ import { useLiveTabBadges } from "../../src/hooks/useLiveTabBadges";
 import { useAuthStore } from "../../src/store/auth.store";
 
 export default function ClientLayout() {
+  const { t } = useTranslation();
   const isHydrated = useAuthStore((state) => state.isHydrated);
   const user = useAuthStore((state) => state.user);
   const tabBadges = useLiveTabBadges({
@@ -37,7 +39,7 @@ export default function ClientLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: "Home",
+          title: t("tabs.home"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="home" size={size} />
           ),
@@ -46,7 +48,7 @@ export default function ClientLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: "Explore",
+          title: t("tabs.explore"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="search" size={size} />
           ),
@@ -57,7 +59,7 @@ export default function ClientLayout() {
         options={{
           tabBarBadge: tabBadges.bookingBadge,
           tabBarBadgeStyle: styles.tabBarBadge,
-          title: "Bookings",
+          title: t("tabs.bookings"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="calendar-outline" size={size} />
           ),
@@ -66,7 +68,7 @@ export default function ClientLayout() {
       <Tabs.Screen
         name="saved"
         options={{
-          title: "Saved",
+          title: t("tabs.saved"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="heart-outline" size={size} />
           ),
@@ -77,7 +79,7 @@ export default function ClientLayout() {
         options={{
           tabBarBadge: tabBadges.messageBadge,
           tabBarBadgeStyle: styles.tabBarBadge,
-          title: "Messages",
+          title: t("tabs.messages"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="chatbubble-ellipses-outline" size={size} />
           ),
@@ -86,7 +88,7 @@ export default function ClientLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
+          title: t("tabs.profile"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="person-outline" size={size} />
           ),

@@ -1,14 +1,17 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Stack } from "expo-router";
-import { useEffect } from "react";
+import { Stack, usePathname, useSegments } from "expo-router";
+import { useEffect, useMemo } from "react";
 import { LoadingScreen } from "../src/components/LoadingScreen";
 import { SafeModeScreen } from "../src/components/SafeModeScreen";
 import { useAppAccessBootstrap } from "../src/hooks/useAppAccessBootstrap";
 import { usePushNotificationRouting } from "../src/hooks/usePushNotificationRouting";
 import { usePushTokenRegistration } from "../src/hooks/usePushTokenRegistration";
 import { useRealtimeUpdates } from "../src/hooks/useRealtimeUpdates";
+import { changeAppLanguage } from "../src/i18n";
+import { VutaI18nProvider } from "../src/i18n/I18nProvider";
 import { useAppConfigStore } from "../src/store/appConfig.store";
 import { useAuthStore } from "../src/store/auth.store";
+import { useNavigationHistoryStore } from "../src/store/navigationHistory.store";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +20,43 @@ function RealtimeBridge() {
   usePushNotificationRouting();
   usePushTokenRegistration();
   useRealtimeUpdates();
+
+  return null;
+}
+
+const getHistoryHref = (pathname: string, segments: string[]) => {
+  const normalizedPathname = pathname.startsWith("/") ? pathname : `/${pathname}`;
+  const routeGroups = segments.filter((segment) => /^\(.+\)$/.test(segment));
+
+  if (!routeGroups.length) {
+    return normalizedPathname;
+  }
+
+  const groupPrefix = `/${routeGroups.join("/")}`;
+
+  if (normalizedPathname === "/") {
+    return groupPrefix;
+  }
+
+  if (normalizedPathname.startsWith(groupPrefix)) {
+    return normalizedPathname;
+  }
+
+  return `${groupPrefix}${normalizedPathname}`;
+};
+
+function NavigationHistoryBridge() {
+  const pathname = usePathname();
+  const segments = useSegments();
+  const record = useNavigationHistoryStore((state) => state.record);
+  const historyHref = useMemo(
+    () => getHistoryHref(pathname, segments as string[]),
+    [pathname, segments]
+  );
+
+  useEffect(() => {
+    record(historyHref);
+  }, [historyHref, record]);
 
   return null;
 }
@@ -42,6 +82,12 @@ function RootNavigator() {
       setSession(null);
     }
   }, [security.mode, setSession, user]);
+
+  useEffect(() => {
+    if (user?.language) {
+      changeAppLanguage(user.language).catch(() => undefined);
+    }
+  }, [user?.language]);
 
   if (!isHydrated || appConfigLoading) {
     return <LoadingScreen />;
@@ -71,9 +117,12 @@ function RootNavigator() {
 
 export default function RootLayout() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <RealtimeBridge />
-      <RootNavigator />
-    </QueryClientProvider>
+    <VutaI18nProvider>
+      <QueryClientProvider client={queryClient}>
+        <RealtimeBridge />
+        <NavigationHistoryBridge />
+        <RootNavigator />
+      </QueryClientProvider>
+    </VutaI18nProvider>
   );
 }

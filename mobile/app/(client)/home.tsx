@@ -392,7 +392,6 @@ export default function ClientHomeScreen() {
             <CategoryProviderRail
               group={group}
               key={`professional-${group.category}`}
-              titleSuffix="professionals"
             />
           ))}
         </>
@@ -400,7 +399,7 @@ export default function ClientHomeScreen() {
 
       {businessProviders.length ? (
         <>
-          <SectionHeader title="Beauty businesses" />
+          <SectionHeader title="Business" />
           <HorizontalRail>
             {businessProviders.map((provider) => (
               <ProviderCard
@@ -448,16 +447,12 @@ const buildProfessionalCategoryGroups = (
 
 type CategoryProviderRailProps = {
   group: CategoryProviderGroupData;
-  titleSuffix: string;
 };
 
-function CategoryProviderRail({
-  group,
-  titleSuffix,
-}: CategoryProviderRailProps) {
+function CategoryProviderRail({ group }: CategoryProviderRailProps) {
   return (
     <>
-      <SectionHeader title={`${group.category} ${titleSuffix}`} />
+      <SectionHeader title={group.category} />
       <HorizontalRail>
         {group.providers.map((provider) => (
           <ProviderCard

@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { BackButton } from "./BackButton";
 import { Screen } from "./Screen";
@@ -13,6 +14,7 @@ import { useAuthStore } from "../store/auth.store";
 const providerRoles = ["beauty_professional", "beauty_business"];
 
 export function AccountSettingsScreen() {
+  const { t } = useTranslation();
   const logout = useAuthStore((state) => state.logout);
   const setSession = useAuthStore((state) => state.setSession);
   const user = useAuthStore((state) => state.user);
@@ -30,14 +32,14 @@ export function AccountSettingsScreen() {
 
   const confirmDeleteAccount = () => {
     Alert.alert(
-      "Delete account?",
-      "This will close your Vuta account and sign you out.",
+      t("account.deleteAccountConfirmTitle"),
+      t("account.deleteAccountConfirmBody"),
       [
-        { style: "cancel", text: "Cancel" },
+        { style: "cancel", text: t("actions.cancel") },
         {
           onPress: deleteAccount,
           style: "destructive",
-          text: "Delete",
+          text: t("actions.delete"),
         },
       ]
     );
@@ -64,8 +66,8 @@ export function AccountSettingsScreen() {
         <View style={styles.header}>
           <BackButton />
           <View style={styles.headerCopy}>
-            <Text style={styles.title}>Settings</Text>
-            <Text style={styles.subtitle}>Manage your Vuta account.</Text>
+            <Text style={styles.title}>{t("account.settings")}</Text>
+            <Text style={styles.subtitle}>{t("profile.settingsSubtitle")}</Text>
           </View>
         </View>
       }
@@ -81,9 +83,9 @@ export function AccountSettingsScreen() {
           <Ionicons color={colors.primary} name="person-outline" size={26} />
         </View>
         <View style={styles.profileCopy}>
-          <Text style={styles.profileTitle}>Profile</Text>
+          <Text style={styles.profileTitle}>{t("account.profile")}</Text>
           <Text numberOfLines={1} style={styles.profileMeta}>
-            {user?.name || "Open your profile"}
+            {user?.name || t("profile.openYourProfile")}
           </Text>
         </View>
         <Ionicons color={colors.muted} name="chevron-forward" size={20} />
@@ -93,25 +95,25 @@ export function AccountSettingsScreen() {
         {isProvider ? (
           <SettingsMenuItem
             icon="card-outline"
-            label="Subscription"
-            meta="View your current plan"
+            label={t("account.subscription")}
+            meta={t("profile.subscriptionMeta")}
             onPress={() => router.push("/(provider)/subscription")}
           />
         ) : null}
         <SettingsMenuItem
           icon="language-outline"
-          label="App language"
-          meta="Choose your preferred language"
+          label={t("account.appLanguage")}
+          meta={t("account.chooseLanguage")}
           onPress={() => router.push(languageRoute)}
         />
         <SettingsMenuItem
           badge={updates.badge}
           icon="newspaper-outline"
-          label="Updates"
+          label={t("account.updates")}
           meta={
             updates.unreadCount
-              ? `${updates.unreadCount} unread`
-              : "Latest Vuta announcements"
+              ? t("common.unreadCount", { count: updates.unreadCount })
+              : t("account.latestAnnouncements")
           }
           onPress={() => router.push("/updates")}
         />
@@ -120,15 +122,17 @@ export function AccountSettingsScreen() {
       <View style={styles.menuCard}>
         <SettingsMenuItem
           icon="log-out-outline"
-          label="Log out"
-          meta="Sign out on this device"
+          label={t("account.logout")}
+          meta={t("account.signOutDevice")}
           onPress={handleLogout}
         />
         <SettingsMenuItem
           danger
           icon="trash-outline"
-          label={isDeleting ? "Deleting account..." : "Delete account"}
-          meta="Close your account permanently"
+          label={
+            isDeleting ? t("account.deletingAccount") : t("account.deleteAccount")
+          }
+          meta={t("account.closeAccount")}
           onPress={confirmDeleteAccount}
         />
       </View>

@@ -1,18 +1,18 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import { colors, radii, spacing } from "../constants/theme";
 import { UserRole } from "../types/auth";
 
 export type SignupRole = Exclude<UserRole, "admin">;
 
 type RoleOption = {
-  label: string;
   role: SignupRole;
 };
 
 const options: RoleOption[] = [
-  { label: "Client", role: "client" },
-  { label: "Professional", role: "beauty_professional" },
-  { label: "Business", role: "beauty_business" },
+  { role: "client" },
+  { role: "beauty_professional" },
+  { role: "beauty_business" },
 ];
 
 type RolePickerProps = {
@@ -21,6 +21,8 @@ type RolePickerProps = {
 };
 
 export function RolePicker({ onChange, value }: RolePickerProps) {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
       {options.map((option) => {
@@ -33,7 +35,7 @@ export function RolePicker({ onChange, value }: RolePickerProps) {
             style={[styles.option, selected ? styles.selected : null]}
           >
             <Text style={[styles.label, selected ? styles.selectedLabel : null]}>
-              {option.label}
+              {t(`roles.${option.role}`)}
             </Text>
           </Pressable>
         );

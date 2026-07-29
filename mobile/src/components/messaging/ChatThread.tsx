@@ -2,7 +2,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
+  ActivityIndicator,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -23,6 +25,7 @@ import { useAuthStore } from "../../store/auth.store";
 import { ChatMessage, ConversationSummary } from "../../types/message";
 
 export function ChatThread() {
+  const { t } = useTranslation();
   const params = useLocalSearchParams<{ id?: string }>();
   const conversationId = Array.isArray(params.id) ? params.id[0] : params.id;
   const queryClient = useQueryClient();
@@ -51,8 +54,15 @@ export function ChatThread() {
 
   const sendMutation = useMutation({
     mutationFn: () => sendMessage(conversationId || "", body.trim()),
-    onSuccess: () => {
+    onSuccess: (sentMessage) => {
       setBody("");
+      queryClient.setQueryData<ChatMessage[]>(
+        ["conversation-messages", conversationId],
+        (currentMessages = []) => [
+          ...currentMessages.filter((message) => message._id !== sentMessage._id),
+          sentMessage,
+        ]
+      );
       queryClient.invalidateQueries({
         queryKey: ["conversation-messages", conversationId],
       });
@@ -66,9 +76,10 @@ export function ChatThread() {
   const title = conversation ? getConversationTitle(conversation) : "Messages";
   const messages = messagesQuery.data ?? [];
   const canSend = Boolean(body.trim()) && !sendMutation.isPending;
+  const isSending = sendMutation.isPending;
 
   if (conversationsQuery.isLoading || messagesQuery.isLoading) {
-    return <LoadingScreen label="Loading chat..." showBackButton size={82} />;
+    return <LoadingScreen label={t("chat.loading")} showBackButton size={82} />;
   }
 
   return (
@@ -116,14 +127,18 @@ export function ChatThread() {
       </ScrollView>
 
       {sendMutation.error ? (
-        <Text style={styles.error}>Message could not be sent.</Text>
+        <Text style={styles.error}>{t("chat.sendError")}</Text>
+      ) : null}
+      {isSending ? (
+        <Text style={styles.sendingText}>{t("chat.sendingMessage")}</Text>
       ) : null}
 
       <View style={styles.composer}>
         <TextInput
+          editable={!isSending}
           multiline
           onChangeText={setBody}
-          placeholder="Write a message"
+          placeholder="Type your message"
           placeholderTextColor={colors.muted}
           style={styles.input}
           value={body}
@@ -131,9 +146,20 @@ export function ChatThread() {
         <Pressable
           disabled={!canSend}
           onPress={() => sendMutation.mutate()}
-          style={[styles.sendButton, !canSend ? styles.sendButtonDisabled : null]}
+          style={[
+            styles.sendButton,
+            isSending ? styles.sendButtonSending : null,
+            !canSend ? styles.sendButtonDisabled : null,
+          ]}
         >
-          <Ionicons color={colors.surface} name="send" size={18} />
+          {isSending ? (
+            <>
+              <ActivityIndicator color={colors.surface} size="small" />
+              <Text style={styles.sendButtonText}>Sending</Text>
+            </>
+          ) : (
+            <Ionicons color={colors.surface} name="send" size={18} />
+          )}
         </Pressable>
       </View>
     </Screen>
@@ -158,9 +184,18 @@ function MessageBubble({ currentUserId, message }: MessageBubbleProps) {
           {message.body}
         </Text>
         {message.createdAt ? (
-          <Text style={[styles.messageTime, mine ? styles.myMessageTime : null]}>
-            {formatMessageTime(message.createdAt)}
-          </Text>
+          <View style={styles.messageStatusRow}>
+            <Text style={[styles.messageTime, mine ? styles.myMessageTime : null]}>
+              {formatMessageTime(message.createdAt)}
+            </Text>
+            {mine ? (
+              <Ionicons
+                color={colors.surfaceMuted}
+                name="checkmark-done"
+                size={13}
+              />
+            ) : null}
+          </View>
         ) : null}
       </View>
     </View>
@@ -264,6 +299,12 @@ const styles = StyleSheet.create({
     color: colors.muted,
     fontSize: 10,
     fontWeight: "700",
+  },
+  messageStatusRow: {
+    alignItems: "center",
+    alignSelf: "flex-end",
+    flexDirection: "row",
+    gap: 3,
     marginTop: 5,
   },
   myMessageTime: {
@@ -273,6 +314,12 @@ const styles = StyleSheet.create({
     color: colors.danger,
     fontSize: 13,
     fontWeight: "800",
+  },
+  sendingText: {
+    alignSelf: "flex-end",
+    color: colors.muted,
+    fontSize: 12,
+    fontWeight: "700",
   },
   composer: {
     alignItems: "flex-end",
@@ -297,11 +344,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.primary,
     borderRadius: 20,
+    flexDirection: "row",
+    gap: 6,
     height: 40,
     justifyContent: "center",
     width: 40,
   },
+  sendButtonSending: {
+    paddingHorizontal: spacing.sm,
+    width: 104,
+  },
   sendButtonDisabled: {
     opacity: 0.45,
+  },
+  sendButtonText: {
+    color: colors.surface,
+    fontSize: 12,
+    fontWeight: "800",
   },
 });

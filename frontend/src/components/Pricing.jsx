@@ -125,14 +125,14 @@ const Pricing = () => {
               </ul>
 
               <a
-                href="#waitlist"
+                href="/download"
                 className={`mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 text-center text-sm font-bold transition ${
                   plan.popular
                     ? "bg-[#F26B5E] text-white hover:bg-[#741B5D]"
                     : "bg-[#741B5D] text-white hover:bg-[#F26B5E]"
                 }`}
               >
-                Join early
+                Download app
                 <FaArrowRight aria-hidden="true" className="text-xs" />
               </a>
             </article>

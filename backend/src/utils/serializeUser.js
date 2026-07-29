@@ -9,6 +9,7 @@ const serializeUser = (user) => ({
   area: user.area,
   profileImage: user.profileImage,
   preferences: user.preferences || [],
+  language: user.language,
   isVerified: user.isVerified,
   isActive: user.isActive,
 });

@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 import { LoadingScreen } from "../../src/components/LoadingScreen";
 import { colors } from "../../src/constants/theme";
@@ -9,6 +10,7 @@ import { useAuthStore } from "../../src/store/auth.store";
 const providerRoles = ["beauty_professional", "beauty_business"];
 
 export default function ProviderLayout() {
+  const { t } = useTranslation();
   const isHydrated = useAuthStore((state) => state.isHydrated);
   const user = useAuthStore((state) => state.user);
   const tabBadges = useLiveTabBadges({
@@ -41,7 +43,7 @@ export default function ProviderLayout() {
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: "Dashboard",
+          title: t("tabs.dashboard"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="home" size={size} />
           ),
@@ -52,7 +54,7 @@ export default function ProviderLayout() {
         options={{
           tabBarBadge: tabBadges.bookingBadge,
           tabBarBadgeStyle: styles.tabBarBadge,
-          title: "Bookings",
+          title: t("tabs.bookings"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="calendar-outline" size={size} />
           ),
@@ -61,7 +63,7 @@ export default function ProviderLayout() {
       <Tabs.Screen
         name="services"
         options={{
-          title: "Services",
+          title: t("tabs.services"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="list-outline" size={size} />
           ),
@@ -72,7 +74,7 @@ export default function ProviderLayout() {
         options={{
           tabBarBadge: tabBadges.messageBadge,
           tabBarBadgeStyle: styles.tabBarBadge,
-          title: "Messages",
+          title: t("tabs.messages"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="chatbubble-ellipses-outline" size={size} />
           ),
@@ -82,7 +84,7 @@ export default function ProviderLayout() {
         name="portfolio"
         options={{
           href: isBusiness ? null : undefined,
-          title: "Portfolio",
+          title: t("tabs.portfolio"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="images-outline" size={size} />
           ),
@@ -92,7 +94,7 @@ export default function ProviderLayout() {
         name="team"
         options={{
           href: isBusiness ? undefined : null,
-          title: "Team",
+          title: t("tabs.team"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="people-outline" size={size} />
           ),
@@ -101,7 +103,7 @@ export default function ProviderLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
+          title: t("tabs.profile"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="person-outline" size={size} />
           ),

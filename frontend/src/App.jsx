@@ -7,6 +7,7 @@ import Pricing from "./components/Pricing";
 import WaitlistForm from "./components/WaitlistForm";
 import Footer from "./components/Footer";
 import AdminDashboard from "./admin/AdminDashboard";
+import DownloadPage from "./components/DownloadPage";
 import SEOHead from "./components/SEOHead";
 import { PartnershipForm } from "./components/PartnershipModal";
 import LegalPage from "./components/LegalPage";
@@ -29,6 +30,12 @@ const seo = {
     description:
       "Join the Vuta early access list for clients, professionals, salons, spas, barbershops, and beauty businesses across African cities.",
     title: "Early Access",
+  },
+  download: {
+    canonical: "https://vuta.app/download",
+    description:
+      "Download Vuta for iOS or Android. Discover trusted beauty services, manage professional bookings, or run a beauty business from the Vuta mobile app.",
+    title: "Download",
   },
   partners: {
     canonical: "https://vuta.app/become-a-partner",
@@ -126,6 +133,14 @@ function WaitlistPage() {
   );
 }
 
+function DownloadRoutePage({ platform }) {
+  return (
+    <PublicShell page={seo.download}>
+      <DownloadPage platform={platform} />
+    </PublicShell>
+  );
+}
+
 function PartnerPage() {
   return (
     <PublicShell page={seo.partners}>
@@ -178,6 +193,18 @@ function App() {
 
   if (pathname === "/waitlist") {
     return <WaitlistPage />;
+  }
+
+  if (pathname === "/download") {
+    return <DownloadRoutePage />;
+  }
+
+  if (pathname === "/download/ios") {
+    return <DownloadRoutePage platform="ios" />;
+  }
+
+  if (pathname === "/download/android") {
+    return <DownloadRoutePage platform="android" />;
   }
 
   if (pathname === "/become-a-partner") {

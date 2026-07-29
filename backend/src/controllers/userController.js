@@ -37,6 +37,7 @@ const updateMe = asyncHandler(async (req, res) => {
     "area",
     "profileImage",
     "preferences",
+    "language",
   ]);
 
   const user = await User.findByIdAndUpdate(req.user._id, updates, {

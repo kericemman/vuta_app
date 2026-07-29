@@ -17,6 +17,7 @@ export type User = {
   preferences?: string[];
   isVerified: boolean;
   isActive: boolean;
+  language?: string;
 };
 
 export type AuthSession = {

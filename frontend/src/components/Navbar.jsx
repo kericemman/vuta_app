@@ -29,16 +29,16 @@ const Navbar = () => {
           <a href="/pricing" className="transition hover:text-[#F26B5E]">
             Pricing
           </a>
-          <a href="/waitlist" className="transition hover:text-[#F26B5E]">
-            Early Access
+          <a href="/download" className="transition hover:text-[#F26B5E]">
+            Download
           </a>
         </nav>
 
         <a
-          href="/waitlist"
+          href="/download"
           className="rounded-full bg-[#741B5D] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#F26B5E] hover:scale-[1.02]"
         >
-          Get Early Access
+          Download App
         </a>
       </div>
     </header>

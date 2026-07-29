@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Pressable,
   StyleSheet,
@@ -21,6 +22,7 @@ export function TextField({
   style,
   ...props
 }: TextFieldProps) {
+  const { t } = useTranslation();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const canTogglePassword = Boolean(secureTextEntry);
   const inputSecureTextEntry = canTogglePassword
@@ -41,7 +43,9 @@ export function TextField({
           />
           <Pressable
             accessibilityLabel={
-              isPasswordVisible ? "Hide password" : "Show password"
+              isPasswordVisible
+                ? `${t("actions.hide")} ${label}`
+                : `${t("actions.show")} ${label}`
             }
             accessibilityRole="button"
             hitSlop={8}
@@ -49,7 +53,7 @@ export function TextField({
             style={styles.toggleButton}
           >
             <Text style={styles.toggleText}>
-              {isPasswordVisible ? "Hide" : "Show"}
+              {isPasswordVisible ? t("actions.hide") : t("actions.show")}
             </Text>
           </Pressable>
         </View>

@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, router } from "expo-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import {
   Country,
@@ -22,23 +23,41 @@ import { colors, spacing } from "../../src/constants/theme";
 import { useAuthStore } from "../../src/store/auth.store";
 import { normalizePhoneNumber } from "../../src/utils/phone";
 
-const schema = z.object({
-  area: z.string().trim().optional(),
-  city: z.string().trim().optional(),
-  country: z.string().trim().min(1, "Country is required."),
-  email: z.string().trim().email("Email is invalid.").optional().or(z.literal("")),
-  name: z.string().trim().min(1, "Name is required."),
-  password: z.string().min(8, "Password must be at least 8 characters."),
-  phone: z.string().trim().min(1, "Phone number is required."),
-  role: z.enum(["client", "beauty_professional", "beauty_business"]),
-});
-
-type RegisterForm = z.infer<typeof schema>;
+type RegisterForm = {
+  area?: string;
+  city?: string;
+  country: string;
+  email?: string;
+  name: string;
+  password: string;
+  phone: string;
+  role: SignupRole;
+};
 
 export default function RegisterScreen() {
+  const { t } = useTranslation();
   const error = useAuthStore((state) => state.error);
   const isLoading = useAuthStore((state) => state.isLoading);
   const register = useAuthStore((state) => state.register);
+  const schema = useMemo(
+    () =>
+      z.object({
+        area: z.string().trim().optional(),
+        city: z.string().trim().optional(),
+        country: z.string().trim().min(1, t("auth.countryRequired")),
+        email: z
+          .string()
+          .trim()
+          .email(t("auth.invalidEmail"))
+          .optional()
+          .or(z.literal("")),
+        name: z.string().trim().min(1, t("auth.nameRequired")),
+        password: z.string().min(8, t("auth.passwordMin")),
+        phone: z.string().trim().min(1, t("auth.phoneRequired")),
+        role: z.enum(["client", "beauty_professional", "beauty_business"]),
+      }),
+    [t]
+  );
   const [accountCountryCode, setAccountCountryCode] =
     useState<CountryCode>("KE");
   const [accountCountryName, setAccountCountryName] = useState("Kenya");
@@ -90,7 +109,7 @@ export default function RegisterScreen() {
 
     if (!normalizedPhone) {
       setError("phone", {
-        message: `Enter a valid phone number for +${phoneCallingCode}.`,
+        message: t("auth.validPhoneForCode", { code: phoneCallingCode }),
         type: "validate",
       });
       return;
@@ -112,13 +131,13 @@ export default function RegisterScreen() {
     <Screen>
       <View style={styles.header}>
         <BrandLogo size={76} />
-        <Text style={styles.title}>Create your account</Text>
+        <Text style={styles.title}>{t("auth.createAccountTitle")}</Text>
         <Text style={styles.subtitle}>
-          Join as a client, professional, or beauty business.
+          {t("auth.joinSubtitle")}
         </Text>
       </View>
 
-      <Text style={styles.sectionLabel}>Account type</Text>
+      <Text style={styles.sectionLabel}>{t("auth.accountType")}</Text>
       <RolePicker
         onChange={(value: SignupRole) => setValue("role", value)}
         value={role}
@@ -130,7 +149,7 @@ export default function RegisterScreen() {
         render={({ field }) => (
           <TextField
             error={errors.name?.message}
-            label="Full name"
+            label={t("auth.fullName")}
             onBlur={field.onBlur}
             onChangeText={field.onChange}
             placeholder="Jane Wanjiku"
@@ -146,7 +165,7 @@ export default function RegisterScreen() {
           <TextField
             error={errors.email?.message}
             keyboardType="email-address"
-            label="Email"
+            label={t("auth.email")}
             onBlur={field.onBlur}
             onChangeText={field.onChange}
             placeholder="jane@example.com"
@@ -163,7 +182,7 @@ export default function RegisterScreen() {
             callingCode={phoneCallingCode}
             countryCode={phoneCountryCode}
             error={errors.phone?.message}
-            label="Phone"
+            label={t("auth.phone")}
             onBlur={field.onBlur}
             onCountrySelect={handlePhoneCountrySelect}
             onChangeText={field.onChange}
@@ -179,7 +198,7 @@ export default function RegisterScreen() {
         render={({ field }) => (
           <TextField
             error={errors.password?.message}
-            label="Password"
+            label={t("auth.password")}
             onBlur={field.onBlur}
             onChangeText={field.onChange}
             placeholder="At least 8 characters"
@@ -198,7 +217,7 @@ export default function RegisterScreen() {
               countryCode={accountCountryCode}
               countryName={accountCountryName || field.value}
               error={errors.country?.message}
-              label="Country"
+              label={t("auth.country")}
               onSelect={handleAccountCountrySelect}
             />
           )}
@@ -210,7 +229,7 @@ export default function RegisterScreen() {
           render={({ field }) => (
             <TextField
               error={errors.city?.message}
-              label="City"
+              label={t("auth.city")}
               onBlur={field.onBlur}
               onChangeText={field.onChange}
               placeholder="Nairobi"
@@ -225,7 +244,7 @@ export default function RegisterScreen() {
           render={({ field }) => (
             <TextField
               error={errors.area?.message}
-              label="Area"
+              label={t("auth.area")}
               onBlur={field.onBlur}
               onChangeText={field.onChange}
               placeholder="Kilimani"
@@ -238,15 +257,15 @@ export default function RegisterScreen() {
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <PrimaryButton
-        label="Create account"
+        label={t("actions.createAccount")}
         loading={isLoading}
         onPress={onSubmit}
       />
 
       <Text style={styles.footerText}>
-        Already have an account?{" "}
+        {t("auth.alreadyHaveAccount")}{" "}
         <Link href="/(auth)/login" style={styles.link}>
-          Log in
+          {t("actions.logIn")}
         </Link>
       </Text>
     </Screen>

@@ -203,6 +203,7 @@ const userSchemas = {
       city: optionalString,
       area: optionalString,
       profileImage: optionalString,
+      language: optionalLimitedString(8),
       preferences: z
         .array(nonEmptyString("Preference cannot be empty."))
         .max(20)

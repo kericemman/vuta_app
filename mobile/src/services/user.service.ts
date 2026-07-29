@@ -7,6 +7,7 @@ export type UpdateMePayload = {
   city?: string;
   country?: string;
   email?: string;
+  language?: string;
   name?: string;
   phone?: string;
   preferences?: string[];

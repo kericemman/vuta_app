@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Image,
   Pressable,
@@ -10,10 +11,12 @@ import {
   Text,
   View,
 } from "react-native";
+import { AppVersionText } from "../../src/components/AppVersionText";
 import { DashboardCard } from "../../src/components/DashboardCard";
 import { PrimaryButton } from "../../src/components/PrimaryButton";
 import { Screen } from "../../src/components/Screen";
 import { TextField } from "../../src/components/TextField";
+import { VUTA_DOWNLOAD_URL } from "../../src/constants/links";
 import { colors, radii, spacing } from "../../src/constants/theme";
 import { useUpdateUnreadCount } from "../../src/hooks/useUpdateUnreadCount";
 import { getApiErrorMessage } from "../../src/services/api";
@@ -24,6 +27,7 @@ import {
 import { useAuthStore } from "../../src/store/auth.store";
 
 export default function ClientProfileScreen() {
+  const { t } = useTranslation();
   const setUser = useAuthStore((state) => state.setUser);
   const user = useAuthStore((state) => state.user);
   const updates = useUpdateUnreadCount();
@@ -64,7 +68,7 @@ export default function ClientProfileScreen() {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (!permission.granted) {
-      setError("Allow photo library access to update your profile picture.");
+      setError(t("profile.photoPermission"));
       return;
     }
 
@@ -84,7 +88,7 @@ export default function ClientProfileScreen() {
     try {
       const upload = await uploadProfileImageRequest(result.assets[0]);
       await setUser(upload.user);
-      setMessage("Profile picture updated.");
+      setMessage(t("profile.profilePictureUpdated"));
     } catch (uploadError) {
       setError(getApiErrorMessage(uploadError));
     } finally {
@@ -97,7 +101,7 @@ export default function ClientProfileScreen() {
     setMessage("");
 
     if (!name.trim() || !phone.trim()) {
-      setError("Name and phone number are required.");
+      setError(t("profile.namePhoneRequired"));
       return;
     }
 
@@ -111,7 +115,7 @@ export default function ClientProfileScreen() {
 
       await setUser(updatedUser);
       setIsEditing(false);
-      setMessage("Profile updated.");
+      setMessage(t("profile.profileUpdated"));
     } catch (saveError) {
       setError(getApiErrorMessage(saveError));
     } finally {
@@ -122,7 +126,7 @@ export default function ClientProfileScreen() {
   const inviteFriend = async () => {
     await Share.share({
       message:
-        "I am using Vuta to discover trusted beauty professionals. Join me on Vuta.",
+        `I am using Vuta to discover trusted beauty professionals and book beauty services with ease. Join me on Vuta: ${VUTA_DOWNLOAD_URL}`,
     });
   };
 
@@ -145,13 +149,13 @@ export default function ClientProfileScreen() {
 
           <View style={styles.identityCopy}>
             <Text numberOfLines={1} style={styles.name}>
-              {name || "Your profile"}
+              {name || t("profile.yourProfile")}
             </Text>
             <Text numberOfLines={1} style={styles.meta}>
               {phone}
             </Text>
             {isUploading ? (
-              <Text style={styles.uploading}>Uploading photo...</Text>
+              <Text style={styles.uploading}>{t("profile.uploadingPhoto")}</Text>
             ) : null}
           </View>
 
@@ -164,33 +168,35 @@ export default function ClientProfileScreen() {
               name={isEditing ? "close" : "create-outline"}
               size={18}
             />
-            <Text style={styles.editText}>{isEditing ? "Close" : "Edit"}</Text>
+            <Text style={styles.editText}>
+              {isEditing ? t("actions.cancel") : t("actions.edit")}
+            </Text>
           </Pressable>
         </View>
       </View>
 
       {isEditing ? (
-        <DashboardCard title="Edit account">
-          <TextField label="Name" onChangeText={setName} value={name} />
+        <DashboardCard title={t("profile.editAccount")}>
+          <TextField label={t("auth.fullName")} onChangeText={setName} value={name} />
           <TextField
             editable={false}
             keyboardType="email-address"
-            label="Email"
+            label={t("auth.email")}
             placeholder="you@example.com"
             style={styles.lockedInput}
             value={email}
           />
           <Text style={styles.helperText}>
-            Email cannot be edited after account creation.
+            {t("profile.emailLocked")}
           </Text>
           <TextField
             keyboardType="phone-pad"
-            label="Phone number"
+            label={t("profile.phoneNumber")}
             onChangeText={setPhone}
             value={phone}
           />
           <PrimaryButton
-            label="Save changes"
+            label={t("profile.saveChanges")}
             loading={isSaving}
             onPress={saveProfile}
           />
@@ -203,47 +209,53 @@ export default function ClientProfileScreen() {
       <View style={styles.menu}>
         <ProfileMenuItem
           icon="sparkles-outline"
-          label="Beauty preferences"
+          label={t("profile.beautyPreferences")}
           meta={
             user?.preferences?.length
-              ? `${user.preferences.length} selected`
-              : "Choose what you like"
+              ? t("profile.selectedCount", {
+                  count: user.preferences.length,
+                })
+              : t("profile.chooseWhatYouLike")
           }
           onPress={() => router.push("/(client)/preferences")}
         />
         <ProfileMenuItem
           icon="language-outline"
-          label="App language"
+          label={t("account.appLanguage")}
+          meta={t("account.choosePreferredAppLanguage")}
           onPress={() => router.push("/(client)/language")}
         />
         <ProfileMenuItem
           icon="person-add-outline"
-          label="Invite a friend"
+          label={t("account.inviteAFriend")}
+          meta={t("account.inviteFriendMeta")}
           onPress={inviteFriend}
         />
         <ProfileMenuItem
           icon="chatbox-ellipses-outline"
-          label="Feedback"
-          meta="Tell us what to improve"
+          label={t("account.feedback")}
+          meta={t("account.tellUsImprove")}
           onPress={() => router.push("/(client)/feedback")}
         />
         <ProfileMenuItem
           icon="settings-outline"
-          label="Settings"
+          label={t("account.settings")}
+          meta={t("profile.accountAccessSafety")}
           onPress={() => router.push("/(client)/settings")}
         />
         <ProfileMenuItem
           badge={updates.badge}
           icon="newspaper-outline"
-          label="Updates"
+          label={t("account.updates")}
           meta={
             updates.unreadCount
-              ? `${updates.unreadCount} unread`
-              : "Latest Vuta announcements"
+              ? t("common.unreadCount", { count: updates.unreadCount })
+              : t("account.latestAnnouncements")
           }
           onPress={() => router.push("/updates")}
         />
       </View>
+      <AppVersionText />
     </Screen>
   );
 }

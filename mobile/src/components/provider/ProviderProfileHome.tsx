@@ -1,11 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { Image, Pressable, Share, StyleSheet, Text, View } from "react-native";
+import { AppVersionText } from "../AppVersionText";
 import { DashboardCard } from "../DashboardCard";
 import { LoadingScreen } from "../LoadingScreen";
 import { PrimaryButton } from "../PrimaryButton";
 import { Screen } from "../Screen";
+import { VUTA_DOWNLOAD_URL } from "../../constants/links";
 import { colors, radii, spacing } from "../../constants/theme";
 import { useUpdateUnreadCount } from "../../hooks/useUpdateUnreadCount";
 import {
@@ -33,6 +36,7 @@ type ProviderProfileHomeProps = {
 };
 
 function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
+  const { t } = useTranslation();
   const user = useAuthStore((state) => state.user);
   const updates = useUpdateUnreadCount();
   const isBusiness = kind === "business";
@@ -52,11 +56,11 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
 
   const businessStats = businessStatsQuery.data ?? null;
   const displayName = isBusiness
-    ? profile?.businessName || user?.name || "Business profile"
-    : profile?.businessName || user?.name || "Professional profile";
+    ? profile?.businessName || user?.name || t("common.businessProfile")
+    : profile?.businessName || user?.name || t("common.professionalProfile");
   const roleLabel = isBusiness
-    ? "Beauty business"
-    : profile?.categories?.[0] || "Beauty professional";
+    ? t("common.beautyBusiness")
+    : profile?.categories?.[0] || t("common.beautyProfessional");
   const location = getProviderLocation(profile, user);
   const completion = getProfileCompletion(profile);
   const imageUrl = user?.profileImage || profile?.user?.profileImage;
@@ -74,14 +78,14 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
   const inviteFriend = async () => {
     await Share.share({
       message: isBusiness
-        ? "I am using Vuta to manage bookings, services, and team operations. Join me on Vuta."
-        : "I am using Vuta to manage beauty bookings and grow my profile. Join me on Vuta.",
+        ? `I am using Vuta to manage bookings, services, and my beauty team. Join me on Vuta: ${VUTA_DOWNLOAD_URL}`
+        : `I am using Vuta to manage beauty bookings and grow my professional profile. Join me on Vuta: ${VUTA_DOWNLOAD_URL}`,
     });
   };
 
   if (profileQuery.isLoading) {
     return (
-      <LoadingScreen label="Loading profile..." showBackButton size={82} />
+      <LoadingScreen label={t("common.loadingProfile")} showBackButton size={82} />
     );
   }
 
@@ -119,13 +123,17 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
         </View>
         <View style={styles.editPill}>
           <Ionicons color={colors.primary} name="create-outline" size={16} />
-          <Text style={styles.editText}>Edit</Text>
+          <Text style={styles.editText}>{t("actions.edit")}</Text>
         </View>
       </Pressable>
 
       {!profile ? (
         <DashboardCard
-          title={isBusiness ? "Set up business profile" : "Set up professional profile"}
+          title={
+            isBusiness
+              ? t("profile.setupBusinessProfile")
+              : t("profile.setupProfessionalProfile")
+          }
         >
           <Text style={styles.body}>
             {isBusiness
@@ -133,19 +141,23 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
               : "Add your specialty, bio, location, services, and portfolio so clients can discover and book you."}
           </Text>
           <PrimaryButton
-            label={isBusiness ? "Create business profile" : "Create professional profile"}
+            label={
+              isBusiness
+                ? t("profile.createBusinessProfile")
+                : t("profile.createProfessionalProfile")
+            }
             onPress={() => router.push(editRoute)}
           />
         </DashboardCard>
       ) : (
         <View style={styles.statusGrid}>
           <StatTile
-            label="Profile"
+            label={t("profile.profileStrength")}
             value={`${completion}%`}
             icon="shield-checkmark-outline"
           />
           <StatTile
-            label={isBusiness ? "Services" : "Portfolio"}
+            label={isBusiness ? t("profile.services") : t("profile.portfolio")}
             value={
               isBusiness
                 ? String(businessStats?.counts.totalServices || 0)
@@ -154,7 +166,7 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
             icon={isBusiness ? "list-outline" : "images-outline"}
           />
           <StatTile
-            label={isBusiness ? "Team" : "Reviews"}
+            label={isBusiness ? t("profile.team") : t("profile.reviews")}
             value={
               isBusiness
                 ? String(businessStats?.counts.totalEmployees || 0)
@@ -181,6 +193,7 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
           onInvite={inviteFriend}
         />
       )}
+      <AppVersionText />
     </Screen>
   );
 }
@@ -197,33 +210,37 @@ function ProfessionalProfileSections({
   unreadUpdateCount,
   unreadUpdates,
 }: ProviderSectionProps & { averageRating: number }) {
+  const { t } = useTranslation();
+
   return (
     <>
-      <DashboardCard title="Professional tools">
+      <DashboardCard title={t("profile.professionalTools")}>
         <ProviderProfileMenuItem
           icon="list-outline"
-          label="Services"
-          meta="Create and manage your bookable services"
+          label={t("profile.services")}
+          meta={t("profile.manageBookableServices")}
           onPress={() => router.push("/(provider)/services")}
         />
         <ProviderProfileMenuItem
           icon="images-outline"
-          label="Portfolio"
-          meta="Show your best work to clients"
+          label={t("profile.portfolio")}
+          meta={t("profile.showBestWork")}
           onPress={() => router.push("/(provider)/portfolio")}
         />
         <ProviderProfileMenuItem
           icon="analytics-outline"
-          label="Performance"
-          meta={`Current rating ${averageRating.toFixed(1)}`}
+          label={t("profile.performance")}
+          meta={t("profile.currentRating", {
+            rating: averageRating.toFixed(1),
+          })}
           onPress={() => router.push("/(provider)/dashboard")}
         />
       </DashboardCard>
 
       <AccountSection
-        inviteMeta="Invite another beauty professional"
+        inviteMeta={t("profile.inviteProfessional")}
         onInvite={onInvite}
-        planMeta="Professional plan"
+        planMeta={t("common.professionalPlan")}
         unreadUpdateCount={unreadUpdateCount}
         unreadUpdates={unreadUpdates}
       />
@@ -238,19 +255,21 @@ function BusinessProfileSections({
   unreadUpdateCount,
   unreadUpdates,
 }: ProviderSectionProps & { revenue: number; savedByClients: number }) {
+  const { t } = useTranslation();
+
   return (
     <>
-      <DashboardCard title="Business tools">
+      <DashboardCard title={t("profile.businessTools")}>
         <ProviderProfileMenuItem
           icon="people-outline"
-          label="Team"
-          meta="View and manage employee profiles"
+          label={t("profile.team")}
+          meta={t("profile.manageEmployeeProfiles")}
           onPress={() => router.push("/(provider)/team")}
         />
         <ProviderProfileMenuItem
           icon="person-add-outline"
-          label="Add employee"
-          meta="Create a staff profile with services and availability"
+          label={t("profile.addEmployee")}
+          meta={t("profile.createStaffProfile")}
           onPress={() =>
             router.push({
               pathname: "/(provider)/team",
@@ -260,22 +279,25 @@ function BusinessProfileSections({
         />
         <ProviderProfileMenuItem
           icon="list-outline"
-          label="Services"
-          meta="Manage services clients can book"
+          label={t("profile.services")}
+          meta={t("profile.manageServices")}
           onPress={() => router.push("/(provider)/services")}
         />
         <ProviderProfileMenuItem
           icon="bar-chart-outline"
-          label="Business statistics"
-          meta={`${formatMoney(revenue)} this month, ${savedByClients} saves`}
+          label={t("profile.businessStatistics")}
+          meta={t("profile.businessStatsSummary", {
+            revenue: formatMoney(revenue),
+            saves: savedByClients,
+          })}
           onPress={() => router.push("/(provider)/dashboard")}
         />
       </DashboardCard>
 
       <AccountSection
-        inviteMeta="Invite partners or staff to Vuta"
+        inviteMeta={t("profile.invitePartnersStaff")}
         onInvite={onInvite}
-        planMeta="Business plan"
+        planMeta={t("common.businessPlan")}
         unreadUpdateCount={unreadUpdateCount}
         unreadUpdates={unreadUpdates}
       />
@@ -290,44 +312,48 @@ function AccountSection({
   unreadUpdateCount,
   unreadUpdates,
 }: ProviderSectionProps & { inviteMeta: string; planMeta: string }) {
+  const { t } = useTranslation();
+
   return (
-    <DashboardCard title="Account">
+    <DashboardCard title={t("profile.account")}>
       <ProviderProfileMenuItem
         icon="card-outline"
-        label="Subscription"
+        label={t("account.subscription")}
         meta={planMeta}
         onPress={() => router.push("/(provider)/subscription")}
       />
       <ProviderProfileMenuItem
         icon="language-outline"
-        label="App language"
-        meta="Choose your preferred app language"
+        label={t("account.appLanguage")}
+        meta={t("account.choosePreferredAppLanguage")}
         onPress={() => router.push("/(provider)/language")}
       />
       <ProviderProfileMenuItem
         icon="person-add-outline"
-        label="Invite a friend"
+        label={t("account.inviteAFriend")}
         meta={inviteMeta}
         onPress={onInvite}
       />
       <ProviderProfileMenuItem
         icon="chatbox-ellipses-outline"
-        label="Feedback"
-        meta="Tell us what to improve"
+        label={t("account.feedback")}
+        meta={t("account.tellUsImprove")}
         onPress={() => router.push("/(provider)/feedback")}
       />
       <ProviderProfileMenuItem
         icon="settings-outline"
-        label="Settings"
-        meta="Account access and safety"
+        label={t("account.settings")}
+        meta={t("profile.accountAccessSafety")}
         onPress={() => router.push("/(provider)/settings")}
       />
       <ProviderProfileMenuItem
         badge={unreadUpdates}
         icon="newspaper-outline"
-        label="Updates"
+        label={t("account.updates")}
         meta={
-          unreadUpdateCount ? `${unreadUpdateCount} unread` : "Latest Vuta announcements"
+          unreadUpdateCount
+            ? t("common.unreadCount", { count: unreadUpdateCount })
+            : t("account.latestAnnouncements")
         }
         onPress={() => router.push("/updates")}
       />

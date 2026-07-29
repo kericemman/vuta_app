@@ -1,82 +1,30 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as Localization from "expo-localization";
-import * as SecureStore from "expo-secure-store";
-import ISO6391 from "iso-639-1";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { BackButton } from "./BackButton";
 import { Screen } from "./Screen";
 import { colors, radii, spacing } from "../constants/theme";
-
-const LANGUAGE_KEY = "vuta.app.language";
-
-type AfricanLanguage = {
-  code: string;
-  fallbackName?: string;
-  fallbackNativeName?: string;
-  region: string;
-};
-
-const africanLanguages: AfricanLanguage[] = [
-  { code: "en", region: "Widely used" },
-  { code: "sw", region: "East Africa" },
-  { code: "ar", region: "North Africa, Sudan, Sahel" },
-  { code: "fr", region: "West, Central, North Africa" },
-  { code: "pt", region: "Angola, Mozambique, Guinea-Bissau" },
-  { code: "ha", region: "West Africa" },
-  { code: "am", region: "Ethiopia" },
-  { code: "yo", region: "Nigeria, Benin, Togo" },
-  { code: "ig", region: "Nigeria" },
-  { code: "om", region: "Ethiopia, Kenya" },
-  { code: "so", region: "Somalia, Djibouti, Ethiopia, Kenya" },
-  { code: "rw", region: "Rwanda, Great Lakes" },
-  { code: "rn", region: "Burundi, Great Lakes" },
-  { code: "ln", region: "DR Congo, Congo, Central Africa" },
-  { code: "lg", region: "Uganda" },
-  { code: "ak", region: "Ghana, Ivory Coast" },
-  { code: "ff", region: "West and Central Africa" },
-  { code: "wo", region: "Senegal, Gambia, Mauritania" },
-  { code: "bm", region: "Mali, West Africa" },
-  { code: "ee", region: "Ghana, Togo" },
-  { code: "mg", region: "Madagascar" },
-  { code: "sn", region: "Zimbabwe, Southern Africa" },
-  { code: "st", region: "Lesotho, South Africa" },
-  { code: "tn", region: "Botswana, South Africa" },
-  { code: "xh", region: "South Africa" },
-  { code: "zu", region: "South Africa" },
-  { code: "af", region: "South Africa, Namibia" },
-  { code: "ti", region: "Eritrea, Ethiopia" },
-  { code: "ny", region: "Malawi, Zambia, Mozambique" },
-  { code: "ts", region: "Mozambique, South Africa" },
-  { code: "ve", region: "South Africa, Zimbabwe" },
-];
-
-const getLanguageName = (language: AfricanLanguage) =>
-  ISO6391.getName(language.code) || language.fallbackName || language.code;
-
-const getNativeLanguageName = (language: AfricanLanguage) =>
-  ISO6391.getNativeName(language.code) ||
-  language.fallbackNativeName ||
-  getLanguageName(language);
+import { changeAppLanguage } from "../i18n";
+import {
+  africanLanguages,
+  getLanguageName,
+  getNativeLanguageName,
+  normalizeAppLanguageCode,
+} from "../i18n/languages";
+import { updateMeRequest } from "../services/user.service";
+import { useAuthStore } from "../store/auth.store";
 
 export function AppLanguageScreen() {
+  const { i18n, t } = useTranslation();
+  const setUser = useAuthStore((state) => state.setUser);
+  const user = useAuthStore((state) => state.user);
   const deviceLanguage = Localization.getLocales()[0]?.languageCode || "en";
-  const supportedDeviceLanguage = africanLanguages.some(
-    (language) => language.code === deviceLanguage
-  )
-    ? deviceLanguage
-    : "en";
-  const [selectedLanguage, setSelectedLanguage] = useState(
-    supportedDeviceLanguage
-  );
-
-  useEffect(() => {
-    SecureStore.getItemAsync(LANGUAGE_KEY).then((value) => {
-      if (value) {
-        setSelectedLanguage(value);
-      }
-    });
-  }, []);
+  const supportedDeviceLanguage = normalizeAppLanguageCode(deviceLanguage);
+  const selectedLanguage = normalizeAppLanguageCode(i18n.language);
+  const [syncMessage, setSyncMessage] = useState("");
+  const [syncError, setSyncError] = useState("");
 
   const selectedLanguageName = useMemo(() => {
     const selected = africanLanguages.find(
@@ -87,8 +35,22 @@ export function AppLanguageScreen() {
   }, [selectedLanguage]);
 
   const selectLanguage = async (value: string) => {
-    setSelectedLanguage(value);
-    await SecureStore.setItemAsync(LANGUAGE_KEY, value);
+    setSyncError("");
+    setSyncMessage("");
+    await changeAppLanguage(value);
+
+    if (!user) {
+      setSyncMessage(t("language.savedLocally"));
+      return;
+    }
+
+    try {
+      const updatedUser = await updateMeRequest({ language: value });
+      await setUser(updatedUser);
+      setSyncMessage(t("language.savedToAccount"));
+    } catch {
+      setSyncError(t("language.saveError"));
+    }
   };
 
   return (
@@ -97,9 +59,11 @@ export function AppLanguageScreen() {
         <View style={styles.header}>
           <BackButton />
           <View style={styles.headerCopy}>
-            <Text style={styles.title}>App language</Text>
+            <Text style={styles.title}>{t("language.title")}</Text>
             <Text style={styles.subtitle}>
-              Current selection: {selectedLanguageName}
+              {t("language.currentSelection", {
+                language: selectedLanguageName,
+              })}
             </Text>
           </View>
         </View>
@@ -108,9 +72,14 @@ export function AppLanguageScreen() {
       <View style={styles.notice}>
         <Ionicons color={colors.primary} name="phone-portrait-outline" size={20} />
         <Text style={styles.noticeText}>
-          Suggested from your phone: {supportedDeviceLanguage.toUpperCase()}
+          {t("language.suggestedFromPhone", {
+            code: supportedDeviceLanguage.toUpperCase(),
+          })}
         </Text>
       </View>
+
+      {syncMessage ? <Text style={styles.success}>{syncMessage}</Text> : null}
+      {syncError ? <Text style={styles.error}>{syncError}</Text> : null}
 
       <View style={styles.card}>
         {africanLanguages.map((language) => {
@@ -178,6 +147,16 @@ const styles = StyleSheet.create({
     color: colors.muted,
     flex: 1,
     fontSize: 13,
+  },
+  success: {
+    color: colors.success,
+    fontSize: 13,
+    fontWeight: "700",
+  },
+  error: {
+    color: colors.danger,
+    fontSize: 13,
+    fontWeight: "700",
   },
   card: {
     backgroundColor: colors.surface,
