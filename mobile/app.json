@@ -3,6 +3,10 @@
     "name": "Vuta",
     "slug": "vuta",
     "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "orientation": "portrait",
     "icon": "./assets/vuta-logo.png",
     "scheme": "vuta",
@@ -16,6 +20,9 @@
     },
     "android": {
       "package": "app.vuta.mobile",
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#FFF8F3",
         "foregroundImage": "./assets/vuta-logo.png",
@@ -29,11 +36,6 @@
         "android.permission.POST_NOTIFICATIONS",
         "android.permission.RECORD_AUDIO"
       ]
-    },
-    "splash": {
-      "backgroundColor": "#FFF8F3",
-      "image": "./assets/vuta-logo.png",
-      "resizeMode": "contain"
     },
     "web": {
       "favicon": "./assets/vuta-logo.png"
@@ -58,13 +60,23 @@
         {
           "color": "#741B5D"
         }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FFF8F3",
+          "image": "./assets/vuta-logo.png",
+          "imageWidth": 180,
+          "resizeMode": "contain"
+        }
       ]
     ],
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "84696b6a-6bb7-4b07-9bad-d86fd6e1531e"
+        "projectId": "30e27d09-8353-40bd-908e-c9d94b4b1edf"
       }
-    }
+    },
+    "owner": "jeromekerich"
   }
 }
