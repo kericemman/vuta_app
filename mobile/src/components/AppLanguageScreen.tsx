@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { BackButton } from "./BackButton";
 import { Screen } from "./Screen";
-import { colors, radii, spacing } from "../constants/theme";
+import { colors, spacing } from "../constants/theme";
 import { changeAppLanguage } from "../i18n";
 import {
   africanLanguages,
@@ -135,13 +135,9 @@ const styles = StyleSheet.create({
   },
   notice: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     flexDirection: "row",
     gap: spacing.sm,
-    padding: spacing.md,
+    paddingVertical: spacing.xs,
   },
   noticeText: {
     color: colors.muted,
@@ -159,11 +155,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   card: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
-    borderWidth: 1,
-    overflow: "hidden",
+    gap: spacing.xs,
   },
   languageRow: {
     alignItems: "center",
@@ -172,7 +164,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     minHeight: 68,
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: 0,
     paddingVertical: spacing.sm,
   },
   languageCopy: {

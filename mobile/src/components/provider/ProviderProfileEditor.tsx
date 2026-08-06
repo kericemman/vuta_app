@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -11,7 +11,6 @@ import {
   View,
 } from "react-native";
 import { BackButton } from "../BackButton";
-import { DashboardCard } from "../DashboardCard";
 import { LoadingScreen } from "../LoadingScreen";
 import { PrimaryButton } from "../PrimaryButton";
 import { Screen } from "../Screen";
@@ -231,6 +230,7 @@ export function ProviderProfileEditor({ kind }: ProviderProfileEditorProps) {
 
   return (
     <Screen
+      contentStyle={styles.screenContent}
       fixedHeader={
         <View style={styles.fixedHeader}>
           <BackButton />
@@ -270,7 +270,7 @@ export function ProviderProfileEditor({ kind }: ProviderProfileEditorProps) {
         </View>
       </View>
 
-      <DashboardCard title="Account">
+      <PlainEditorSection title="Account">
         <EditorSectionRow
           active={activeSection === "account"}
           icon="person-circle-outline"
@@ -308,10 +308,10 @@ export function ProviderProfileEditor({ kind }: ProviderProfileEditorProps) {
             )
           }
         />
-      </DashboardCard>
+      </PlainEditorSection>
 
       {activeSection === "account" ? (
-        <DashboardCard title={isBusiness ? "Owner contact" : "Account"}>
+        <PlainEditorSection title={isBusiness ? "Owner contact" : "Account"}>
           <TextField label="Name" onChangeText={setName} value={name} />
           <TextField
             editable={false}
@@ -331,11 +331,11 @@ export function ProviderProfileEditor({ kind }: ProviderProfileEditorProps) {
             onChangeText={setPhone}
             value={phone}
           />
-        </DashboardCard>
+        </PlainEditorSection>
       ) : null}
 
       {activeSection === "details" ? (
-        <DashboardCard title={detailsSectionTitle}>
+        <PlainEditorSection title={detailsSectionTitle}>
           <TextField
             label={isBusiness ? "Business name" : "Display name"}
             onChangeText={setBusinessName}
@@ -432,11 +432,11 @@ export function ProviderProfileEditor({ kind }: ProviderProfileEditorProps) {
               );
             })}
           </View>
-        </DashboardCard>
+        </PlainEditorSection>
       ) : null}
 
       {activeSection === "location" ? (
-        <DashboardCard title={isBusiness ? "Business location" : "Location"}>
+        <PlainEditorSection title={isBusiness ? "Business location" : "Location"}>
           <TextField
             label="Country"
             onChangeText={setCountry}
@@ -455,7 +455,7 @@ export function ProviderProfileEditor({ kind }: ProviderProfileEditorProps) {
             placeholder={isBusiness ? "Westlands" : "Kilimani"}
             value={area}
           />
-        </DashboardCard>
+        </PlainEditorSection>
       ) : null}
 
       {profileMutation.isPending ? (
@@ -483,6 +483,22 @@ type EditorSectionRowProps = {
   meta: string;
   onPress: () => void;
 };
+
+function PlainEditorSection({
+  children,
+  title,
+}: {
+  children: ReactNode;
+  title: string;
+}) {
+  return (
+    <View style={styles.editorSection}>
+      <Text style={styles.editorSectionTitle}>{title}</Text>
+      <View style={styles.sectionDivider} />
+      <View style={styles.editorSectionContent}>{children}</View>
+    </View>
+  );
+}
 
 function EditorSectionRow({
   active,
@@ -560,6 +576,9 @@ function FeedbackBanner({ message, tone }: FeedbackBannerProps) {
 }
 
 const styles = StyleSheet.create({
+  screenContent: {
+    paddingHorizontal: spacing.sm,
+  },
   fixedHeader: {
     alignItems: "center",
     flexDirection: "row",
@@ -639,6 +658,21 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontSize: 12,
     fontWeight: "700",
+  },
+  editorSection: {
+    gap: spacing.sm,
+  },
+  editorSectionTitle: {
+    color: colors.text,
+    fontSize: 17,
+    fontWeight: "600",
+  },
+  sectionDivider: {
+    backgroundColor: colors.border,
+    height: StyleSheet.hairlineWidth,
+  },
+  editorSectionContent: {
+    gap: spacing.sm,
   },
   lockedInput: {
     backgroundColor: colors.surfaceMuted,

@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { DashboardCard } from "../../src/components/DashboardCard";
@@ -66,6 +67,7 @@ const mergeAvailability = (items: ProviderAvailability[] = []) =>
   });
 
 export default function BusinessTeamScreen() {
+  const { width } = useWindowDimensions();
   const queryClient = useQueryClient();
   const params = useLocalSearchParams<{ action?: string; intent?: string }>();
   const action = Array.isArray(params.action) ? params.action[0] : params.action;
@@ -356,6 +358,7 @@ export default function BusinessTeamScreen() {
   const bookableEmployees = activeEmployees.filter(
     (employee) => employee.isBookable !== false
   );
+  const isCompactLayout = width < 380;
 
   return (
     <Screen>
@@ -380,11 +383,13 @@ export default function BusinessTeamScreen() {
 
       <View style={styles.statsGrid}>
         <StatCard
+          compact={isCompactLayout}
           icon="people-outline"
           label="Active staff"
           value={String(activeEmployees.length)}
         />
         <StatCard
+          compact={isCompactLayout}
           icon="calendar-outline"
           label="Bookable"
           value={String(bookableEmployees.length)}
@@ -432,8 +437,18 @@ export default function BusinessTeamScreen() {
             value={jobTitle}
           />
 
-          <View style={styles.formGrid}>
-            <View style={styles.formColumn}>
+          <View
+            style={[
+              styles.formGrid,
+              isCompactLayout ? styles.formGridStack : null,
+            ]}
+          >
+            <View
+              style={[
+                styles.formColumn,
+                isCompactLayout ? styles.formColumnFull : null,
+              ]}
+            >
               <TextField
                 keyboardType="phone-pad"
                 label="Phone"
@@ -442,7 +457,12 @@ export default function BusinessTeamScreen() {
                 value={phone}
               />
             </View>
-            <View style={styles.formColumn}>
+            <View
+              style={[
+                styles.formColumn,
+                isCompactLayout ? styles.formColumnFull : null,
+              ]}
+            >
               <TextField
                 keyboardType="email-address"
                 label="Email"
@@ -667,14 +687,15 @@ function Chip({ label, onPress, selected }: ChipProps) {
 }
 
 type StatCardProps = {
+  compact?: boolean;
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
 };
 
-function StatCard({ icon, label, value }: StatCardProps) {
+function StatCard({ compact = false, icon, label, value }: StatCardProps) {
   return (
-    <View style={styles.statCard}>
+    <View style={[styles.statCard, compact ? styles.statCardCompact : null]}>
       <Ionicons color={colors.primary} name={icon} size={20} />
       <Text style={styles.statValue}>{value}</Text>
       <Text style={styles.statLabel}>{label}</Text>
@@ -797,16 +818,18 @@ const styles = StyleSheet.create({
   },
   statsGrid: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: spacing.sm,
   },
   statCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     flex: 1,
     gap: 4,
-    padding: spacing.md,
+    minWidth: 150,
+    paddingVertical: spacing.xs,
+  },
+  statCardCompact: {
+    flexBasis: "100%",
+    minWidth: "100%",
   },
   statValue: {
     color: colors.text,
@@ -877,8 +900,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: spacing.sm,
   },
+  formGridStack: {
+    flexDirection: "column",
+  },
   formColumn: {
     flex: 1,
+  },
+  formColumnFull: {
+    width: "100%",
   },
   fieldLabel: {
     color: colors.text,

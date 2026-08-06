@@ -11,6 +11,10 @@ import DownloadPage from "./components/DownloadPage";
 import SEOHead from "./components/SEOHead";
 import { PartnershipForm } from "./components/PartnershipModal";
 import LegalPage from "./components/LegalPage";
+import {
+  ForgotPasswordPage,
+  ResetPasswordPage,
+} from "./components/PasswordRecoveryPage";
 
 const seo = {
   home: {
@@ -36,6 +40,19 @@ const seo = {
     description:
       "Download Vuta for iOS or Android. Discover trusted beauty services, manage professional bookings, or run a beauty business from the Vuta mobile app.",
     title: "Download",
+  },
+  forgotPassword: {
+    canonical: "https://vuta.app/forgot-password",
+    description:
+      "Request a secure Vuta password reset code for your client, professional, or business account.",
+    title: "Forgot Password",
+  },
+  resetPassword: {
+    canonical: "https://vuta.app/reset-password",
+    description:
+      "Create a new Vuta password using your secure 6-digit reset code.",
+    robots: "noindex, nofollow",
+    title: "Reset Password",
   },
   partners: {
     canonical: "https://vuta.app/become-a-partner",
@@ -205,6 +222,22 @@ function App() {
 
   if (pathname === "/download/android") {
     return <DownloadRoutePage platform="android" />;
+  }
+
+  if (pathname === "/forgot-password") {
+    return (
+      <PublicShell page={seo.forgotPassword}>
+        <ForgotPasswordPage />
+      </PublicShell>
+    );
+  }
+
+  if (pathname === "/reset-password") {
+    return (
+      <PublicShell page={seo.resetPassword}>
+        <ResetPasswordPage />
+      </PublicShell>
+    );
   }
 
   if (pathname === "/become-a-partner") {

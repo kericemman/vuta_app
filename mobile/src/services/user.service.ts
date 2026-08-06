@@ -58,6 +58,7 @@ export const uploadProfileImageRequest = async (asset: UploadImageAsset) => {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      timeout: 60000,
     }
   );
 

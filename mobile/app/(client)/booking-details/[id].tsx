@@ -551,12 +551,8 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
   actionCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     gap: spacing.sm,
-    padding: spacing.md,
+    paddingVertical: spacing.sm,
   },
   actionTitle: {
     color: colors.text,
@@ -586,10 +582,8 @@ const styles = StyleSheet.create({
     fontWeight: "900",
   },
   requestSummary: {
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radii.sm,
     gap: spacing.xs,
-    padding: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   detailTextRow: {
     gap: 2,

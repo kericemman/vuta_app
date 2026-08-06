@@ -112,7 +112,7 @@ export default function ProviderBookingsScreen() {
   ).length;
 
   return (
-    <Screen>
+    <Screen contentStyle={styles.screenContent}>
       <View style={styles.header}>
         <View>
           <Text style={styles.title}>Bookings</Text>
@@ -122,33 +122,38 @@ export default function ProviderBookingsScreen() {
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
-      <DashboardCard title="Requests">
+      <View style={styles.requestsSection}>
+        <Text style={styles.sectionTitle}>Requests</Text>
         {bookingsQuery.isLoading ? (
           <LogoLoader label="Loading requests..." size={32} />
         ) : bookings.length ? (
-          bookings.map((booking) => (
-            <BookingCard
-              booking={booking}
-              employees={employees}
-              isBusinessProfile={Boolean(isBusinessProfile)}
-              isAssigning={assignEmployeeMutation.isPending}
-              isUpdating={statusMutation.isPending}
-              key={booking._id}
-              onAssignEmployee={(employeeId) =>
-                assignEmployeeMutation.mutate({
-                  bookingId: booking._id,
-                  employeeId,
-                })
-              }
-              onStatusChange={(status) =>
-                statusMutation.mutate({ bookingId: booking._id, status })
-              }
-            />
-          ))
+          <View style={styles.requestsList}>
+            {bookings.map((booking) => (
+              <View key={booking._id} style={styles.requestItem}>
+                <BookingCard
+                  booking={booking}
+                  employees={employees}
+                  isBusinessProfile={Boolean(isBusinessProfile)}
+                  isAssigning={assignEmployeeMutation.isPending}
+                  isUpdating={statusMutation.isPending}
+                  onAssignEmployee={(employeeId) =>
+                    assignEmployeeMutation.mutate({
+                      bookingId: booking._id,
+                      employeeId,
+                    })
+                  }
+                  onStatusChange={(status) =>
+                    statusMutation.mutate({ bookingId: booking._id, status })
+                  }
+                />
+                <View style={styles.requestDivider} />
+              </View>
+            ))}
+          </View>
         ) : (
           <Text style={styles.body}>No bookings yet.</Text>
         )}
-      </DashboardCard>
+      </View>
     </Screen>
   );
 }
@@ -341,6 +346,9 @@ function Detail({ icon, text }: DetailProps) {
 }
 
 const styles = StyleSheet.create({
+  screenContent: {
+    paddingHorizontal: spacing.sm,
+  },
   header: {
     marginTop: spacing.lg,
   },
@@ -363,11 +371,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "700",
   },
-  bookingCard: {
-    borderTopColor: colors.border,
-    borderTopWidth: 1,
+  requestsSection: {
     gap: spacing.sm,
-    paddingTop: spacing.md,
+  },
+  requestsList: {
+    gap: spacing.md,
+  },
+  requestItem: {
+    gap: spacing.md,
+  },
+  requestDivider: {
+    backgroundColor: colors.border,
+    height: StyleSheet.hairlineWidth,
+  },
+  sectionTitle: {
+    color: colors.text,
+    fontSize: 17,
+    fontWeight: "900",
+  },
+  bookingCard: {
+    gap: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   bookingHeader: {
     alignItems: "center",
@@ -395,9 +419,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   statusPill: {
-    borderColor: colors.border,
     borderRadius: 999,
-    borderWidth: 1,
     paddingHorizontal: spacing.sm,
     paddingVertical: 4,
   },
@@ -443,10 +465,9 @@ const styles = StyleSheet.create({
     fontWeight: "900",
   },
   assignmentPanel: {
-    backgroundColor: colors.surfaceMuted,
     borderRadius: radii.md,
     gap: spacing.xs,
-    padding: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   assignmentHeader: {
     alignItems: "center",

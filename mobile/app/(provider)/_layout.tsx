@@ -37,6 +37,7 @@ export default function ProviderLayout() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
+        tabBarHideOnKeyboard: true,
         tabBarInactiveTintColor: colors.muted,
       }}
     >
@@ -155,6 +156,7 @@ export default function ProviderLayout() {
         name="chat/[id]"
         options={{
           href: null,
+          tabBarStyle: styles.hiddenTabBar,
         }}
       />
     </Tabs>
@@ -162,6 +164,9 @@ export default function ProviderLayout() {
 }
 
 const styles = StyleSheet.create({
+  hiddenTabBar: {
+    display: "none",
+  },
   tabBarBadge: {
     backgroundColor: colors.cta,
     color: colors.surface,

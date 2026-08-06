@@ -20,6 +20,9 @@ const createNormalConfig = (): AppConfig => ({
 const isMissingAppConfigRoute = (error: unknown) =>
   axios.isAxiosError(error) && error.response?.status === 404;
 
+const shouldUseDevFallback = (error: unknown) =>
+  __DEV__ && (isMissingAppConfigRoute(error) || axios.isAxiosError(error));
+
 type AppConfigState = {
   config: AppConfig;
   error: string | null;
@@ -40,7 +43,7 @@ export const useAppConfigStore = create<AppConfigState>((set) => ({
       const config = await getAppConfig();
       set({ config, error: null });
     } catch (error) {
-      if (isMissingAppConfigRoute(error)) {
+      if (shouldUseDevFallback(error)) {
         set({ config: createNormalConfig(), error: null });
         return;
       }
@@ -69,7 +72,7 @@ export const useAppConfigStore = create<AppConfigState>((set) => ({
       const config = await getAppConfig();
       set({ config, error: null });
     } catch (error) {
-      if (isMissingAppConfigRoute(error)) {
+      if (shouldUseDevFallback(error)) {
         set({ config: createNormalConfig(), error: null });
         return;
       }

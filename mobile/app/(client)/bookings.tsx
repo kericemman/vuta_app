@@ -2,7 +2,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { DashboardCard } from "../../src/components/DashboardCard";
 import { LoadingScreen } from "../../src/components/LoadingScreen";
 import { PrimaryButton } from "../../src/components/PrimaryButton";
 import { Screen } from "../../src/components/Screen";
@@ -27,14 +26,18 @@ export default function ClientBookingsScreen() {
   }
 
   return (
-    <Screen>
+    <Screen contentStyle={styles.screenContent}>
       <Text style={styles.title}>Bookings</Text>
 
-      <DashboardCard title="Booking history">
+      <View style={styles.bookingSection}>
+        <Text style={styles.sectionTitle}>My Booking History</Text>
         {bookings.length ? (
-          bookings.map((booking) => (
-            <BookingRow booking={booking} key={booking._id} />
-          ))
+          <View style={styles.bookingList}>
+            <View style={styles.sectionDivider} />
+            {bookings.map((booking) => (
+              <BookingRow booking={booking} key={booking._id} />
+            ))}
+          </View>
         ) : (
           <View style={styles.emptyState}>
             <Text style={styles.body}>
@@ -47,7 +50,7 @@ export default function ClientBookingsScreen() {
             />
           </View>
         )}
-      </DashboardCard>
+      </View>
     </Screen>
   );
 }
@@ -93,6 +96,9 @@ function BookingRow({ booking }: BookingRowProps) {
 }
 
 const styles = StyleSheet.create({
+  screenContent: {
+    paddingHorizontal: spacing.sm,
+  },
   title: {
     color: colors.text,
     fontSize: 32,
@@ -107,13 +113,26 @@ const styles = StyleSheet.create({
   emptyState: {
     gap: spacing.md,
   },
+  bookingSection: {
+    gap: spacing.sm,
+  },
+  sectionTitle: {
+    color: colors.text,
+    fontSize: 17,
+    fontWeight: "600",
+  },
+  bookingList: {
+    gap: spacing.md,
+  },
+  sectionDivider: {
+    backgroundColor: colors.border,
+    height: StyleSheet.hairlineWidth,
+  },
   bookingRow: {
     alignItems: "center",
-    borderTopColor: colors.border,
-    borderTopWidth: 1,
     flexDirection: "row",
     gap: spacing.sm,
-    paddingTop: spacing.md,
+    paddingVertical: spacing.xs,
   },
   bookingRowPressed: {
     opacity: 0.75,
@@ -146,7 +165,6 @@ const styles = StyleSheet.create({
     fontWeight: "900",
   },
   statusPill: {
-    backgroundColor: colors.surfaceMuted,
     borderRadius: 999,
     paddingHorizontal: spacing.sm,
     paddingVertical: 5,

@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   fixedHeader: {
     backgroundColor: colors.background,
     paddingBottom: spacing.xs,
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.md,
     paddingTop: spacing.md,
   },
   container: {

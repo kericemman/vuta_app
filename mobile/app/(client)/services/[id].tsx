@@ -717,13 +717,9 @@ const styles = StyleSheet.create({
   },
   providerCard: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     flexDirection: "row",
     gap: spacing.sm,
-    padding: spacing.md,
+    paddingVertical: spacing.sm,
   },
   providerIcon: {
     alignItems: "center",
@@ -789,12 +785,8 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   reviewCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     gap: spacing.xs,
-    padding: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   reviewHeader: {
     alignItems: "center",
@@ -824,14 +816,11 @@ const styles = StyleSheet.create({
   serviceRail: {
     flexDirection: "row",
     gap: spacing.sm,
-    paddingRight: spacing.lg,
+    paddingRight: spacing.md,
   },
   anySpecialistCard: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
     borderRadius: radii.md,
-    borderWidth: 1,
     gap: 4,
     minHeight: 136,
     padding: spacing.sm,
@@ -847,10 +836,7 @@ const styles = StyleSheet.create({
   },
   specialistCard: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
     borderRadius: radii.md,
-    borderWidth: 1,
     gap: 4,
     minHeight: 136,
     padding: spacing.sm,
@@ -858,7 +844,6 @@ const styles = StyleSheet.create({
   },
   selectedSpecialistCard: {
     backgroundColor: colors.primary,
-    borderColor: colors.primary,
   },
   specialistImage: {
     backgroundColor: colors.surfaceMuted,
@@ -1007,12 +992,8 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   emptyState: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     gap: spacing.xs,
-    padding: spacing.md,
+    paddingVertical: spacing.sm,
   },
   emptyTitle: {
     color: colors.text,

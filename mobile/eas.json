@@ -8,8 +8,8 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://api.vuta.app/api",
-        "EXPO_PUBLIC_REALTIME_URL": "https://api.vuta.app"
+        "EXPO_PUBLIC_API_URL": "http://192.168.100.54:5050/api",
+        "EXPO_PUBLIC_REALTIME_URL": "http://192.168.100.54:5050"
       }
     },
     "preview": {

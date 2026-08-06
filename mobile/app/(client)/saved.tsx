@@ -9,10 +9,10 @@ import {
 import { LoadingScreen } from "../../src/components/LoadingScreen";
 import { ProviderCard } from "../../src/components/marketplace/ProviderCard";
 import { Screen } from "../../src/components/Screen";
-import { colors, radii, spacing } from "../../src/constants/theme";
+import { colors, spacing } from "../../src/constants/theme";
 import { useSavedProviders } from "../../src/hooks/useSavedProviders";
 
-const SCREEN_HORIZONTAL_PADDING = spacing.lg * 2;
+const SCREEN_HORIZONTAL_PADDING = spacing.md * 2;
 
 const openProviderDetails = (providerId: string) =>
   router.push({
@@ -46,15 +46,19 @@ export default function SavedScreen() {
       </View>
 
       {favourites.length ? (
-        <View style={styles.grid}>
-          {favourites.map((favourite) => (
-            <ProviderCard
-              key={favourite._id}
-              onPress={() => openProviderDetails(favourite.provider._id)}
-              provider={favourite.provider}
-              style={{ width: providerCardWidth }}
-            />
-          ))}
+        <View style={styles.savedSection}>
+          <View style={styles.sectionDivider} />
+          <View style={styles.grid}>
+            {favourites.map((favourite) => (
+              <ProviderCard
+                key={favourite._id}
+                onPress={() => openProviderDetails(favourite.provider._id)}
+                provider={favourite.provider}
+                style={{ width: providerCardWidth }}
+                variant="plain"
+              />
+            ))}
+          </View>
         </View>
       ) : null}
 
@@ -100,14 +104,17 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     justifyContent: "space-between",
   },
+  savedSection: {
+    gap: spacing.md,
+  },
+  sectionDivider: {
+    backgroundColor: colors.border,
+    height: StyleSheet.hairlineWidth,
+  },
   emptyState: {
     alignItems: "flex-start",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     gap: spacing.sm,
-    padding: spacing.md,
+    paddingVertical: spacing.md,
   },
   emptyTitle: {
     color: colors.text,

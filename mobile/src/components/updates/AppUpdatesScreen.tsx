@@ -88,44 +88,45 @@ export function AppUpdatesScreen() {
       ) : null}
 
       <View style={styles.list}>
-        {updates.map((update) => {
+        {updates.map((update, index) => {
           const heroImage = getHeroImage(update);
 
           return (
-            <Pressable
-              key={update.id}
-              onPress={() => openUpdate(update)}
-              style={({ pressed }) => [
-                styles.card,
-                !update.readAt ? styles.unreadCard : null,
-                pressed ? styles.cardPressed : null,
-              ]}
-            >
-              {heroImage ? (
-                <Image source={{ uri: heroImage }} style={styles.cardImage} />
-              ) : null}
-              <View style={styles.cardBody}>
-                <View style={styles.cardTitleRow}>
-                  <Text numberOfLines={2} style={styles.cardTitle}>
-                    {update.title}
+            <View key={update.id}>
+              {index === 0 ? <View style={styles.sectionDivider} /> : null}
+              <Pressable
+                onPress={() => openUpdate(update)}
+                style={({ pressed }) => [
+                  styles.card,
+                  pressed ? styles.cardPressed : null,
+                ]}
+              >
+                {heroImage ? (
+                  <Image source={{ uri: heroImage }} style={styles.cardImage} />
+                ) : null}
+                <View style={styles.cardBody}>
+                  <View style={styles.cardTitleRow}>
+                    <Text numberOfLines={2} style={styles.cardTitle}>
+                      {update.title}
+                    </Text>
+                    {!update.readAt ? <View style={styles.unreadDot} /> : null}
+                  </View>
+                  <Text numberOfLines={2} style={styles.cardSummary}>
+                    {update.summary || getBodyExcerpt(update.body)}
                   </Text>
-                  {!update.readAt ? <View style={styles.unreadDot} /> : null}
+                  <View style={styles.cardFooter}>
+                    <Text style={styles.cardDate}>
+                      {formatUpdateDate(update.publishedAt || update.createdAt)}
+                    </Text>
+                    <Ionicons
+                      color={colors.muted}
+                      name="chevron-forward"
+                      size={18}
+                    />
+                  </View>
                 </View>
-                <Text numberOfLines={2} style={styles.cardSummary}>
-                  {update.summary || getBodyExcerpt(update.body)}
-                </Text>
-                <View style={styles.cardFooter}>
-                  <Text style={styles.cardDate}>
-                    {formatUpdateDate(update.publishedAt || update.createdAt)}
-                  </Text>
-                  <Ionicons
-                    color={colors.muted}
-                    name="chevron-forward"
-                    size={18}
-                  />
-                </View>
-              </View>
-            </Pressable>
+              </Pressable>
+            </View>
           );
         })}
       </View>
@@ -160,15 +161,11 @@ const formatUpdateDate = (value?: string | null) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
-    borderWidth: 1,
-    overflow: "hidden",
+    gap: spacing.sm,
   },
   cardBody: {
     gap: spacing.sm,
-    padding: spacing.md,
+    paddingTop: spacing.xs,
   },
   cardDate: {
     color: colors.muted,
@@ -183,6 +180,7 @@ const styles = StyleSheet.create({
   cardImage: {
     aspectRatio: 16 / 9,
     backgroundColor: colors.surfaceMuted,
+    borderRadius: radii.md,
     width: "100%",
   },
   cardPressed: {
@@ -213,10 +211,6 @@ const styles = StyleSheet.create({
   },
   emptyCard: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
-    borderWidth: 1,
     gap: spacing.sm,
     padding: spacing.lg,
   },
@@ -244,6 +238,11 @@ const styles = StyleSheet.create({
   list: {
     gap: spacing.md,
   },
+  sectionDivider: {
+    backgroundColor: colors.border,
+    height: StyleSheet.hairlineWidth,
+    marginBottom: spacing.md,
+  },
   markAllButton: {
     backgroundColor: colors.surface,
     borderColor: colors.border,
@@ -269,9 +268,6 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 28,
     fontWeight: "900",
-  },
-  unreadCard: {
-    borderColor: colors.primary,
   },
   unreadDot: {
     backgroundColor: colors.cta,

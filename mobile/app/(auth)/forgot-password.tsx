@@ -31,22 +31,22 @@ export default function ForgotPasswordScreen() {
   });
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const [devToken, setDevToken] = useState("");
+  const [devResetCode, setDevResetCode] = useState("");
 
   const onSubmit = handleSubmit(async (values) => {
     setError("");
     setMessage("");
-    setDevToken("");
+    setDevResetCode("");
 
     try {
       const response = await forgotPasswordRequest(values.identifier);
       setMessage(
         response.message ||
-          "If an account exists, password reset instructions have been sent."
+          "If an account exists, a password reset code has been sent."
       );
 
-      if (response.devResetToken) {
-        setDevToken(response.devResetToken);
+      if (response.devResetCode) {
+        setDevResetCode(response.devResetCode);
       }
     } catch (requestError) {
       setError(getApiErrorMessage(requestError));
@@ -81,17 +81,17 @@ export default function ForgotPasswordScreen() {
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
       {message ? <Text style={styles.success}>{message}</Text> : null}
-      {devToken ? (
+      {devResetCode ? (
         <View style={styles.devTokenBox}>
           <Text style={styles.devTokenLabel}>Local reset code</Text>
           <Text selectable style={styles.devToken}>
-            {devToken}
+            {devResetCode}
           </Text>
         </View>
       ) : null}
 
       <PrimaryButton
-        label="Send reset instructions"
+        label="Send reset code"
         loading={isSubmitting}
         onPress={onSubmit}
       />
@@ -99,10 +99,10 @@ export default function ForgotPasswordScreen() {
         label="I have a reset code"
         onPress={() =>
           router.push(
-            devToken
+            devResetCode
               ? {
                   pathname: "/(auth)/reset-password",
-                  params: { token: devToken },
+                  params: { code: devResetCode },
                 }
               : "/(auth)/reset-password"
           )

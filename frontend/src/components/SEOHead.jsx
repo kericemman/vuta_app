@@ -34,6 +34,7 @@ export default function SEOHead({
   canonical = "https://vuta.app/",
   description,
   image = DEFAULT_IMAGE,
+  robots = "index, follow",
   title,
 }) {
   useEffect(() => {
@@ -44,7 +45,7 @@ export default function SEOHead({
     document.title = fullTitle;
     setLinkTag({ href: canonical, rel: "canonical" });
     setMetaTag({ key: "description", value: description });
-    setMetaTag({ key: "robots", value: "index, follow" });
+    setMetaTag({ key: "robots", value: robots });
     setMetaTag({ attr: "property", key: "og:title", value: fullTitle });
     setMetaTag({ attr: "property", key: "og:description", value: description });
     setMetaTag({ attr: "property", key: "og:image", value: image });
@@ -55,7 +56,7 @@ export default function SEOHead({
     setMetaTag({ key: "twitter:title", value: fullTitle });
     setMetaTag({ key: "twitter:description", value: description });
     setMetaTag({ key: "twitter:image", value: image });
-  }, [canonical, description, image, title]);
+  }, [canonical, description, image, robots, title]);
 
   return null;
 }

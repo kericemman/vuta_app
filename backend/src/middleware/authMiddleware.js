@@ -1,6 +1,7 @@
 const ApiError = require("../utils/ApiError");
 const User = require("../models/User");
 const asyncHandler = require("../utils/asyncHandler");
+const { assertUserCanAuthenticate } = require("../utils/accountAccess");
 const { verifyAccessToken } = require("../utils/tokens");
 
 const protect = asyncHandler(async (req, res, next) => {
@@ -14,9 +15,7 @@ const protect = asyncHandler(async (req, res, next) => {
   const decoded = verifyAccessToken(token);
   const user = await User.findById(decoded.id);
 
-  if (!user || !user.isActive) {
-    throw new ApiError(401, "Authentication required.");
-  }
+  await assertUserCanAuthenticate(user);
 
   req.user = user;
   next();
@@ -35,7 +34,8 @@ const optionalAuth = asyncHandler(async (req, res, next) => {
     const decoded = verifyAccessToken(token);
     const user = await User.findById(decoded.id);
 
-    if (user?.isActive) {
+    if (user) {
+      await assertUserCanAuthenticate(user);
       req.user = user;
     }
   } catch {

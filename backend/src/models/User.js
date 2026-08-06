@@ -37,6 +37,16 @@ const userSchema = new mongoose.Schema(
       type: Date,
       select: false,
     },
+    passwordResetCodeSendCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+      select: false,
+    },
+    passwordResetCodeSendWindowStartedAt: {
+      type: Date,
+      select: false,
+    },
     role: {
       type: String,
       enum: [...PUBLIC_SIGNUP_ROLES, ROLES.ADMIN],
@@ -84,6 +94,14 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    accountDisabledUntil: {
+      type: Date,
+    },
+    accountDisabledReason: {
+      type: String,
+      trim: true,
+      maxlength: 80,
+    },
   },
   { timestamps: true }
 );
@@ -102,5 +120,6 @@ userSchema.methods.comparePassword = function comparePassword(password) {
 
 userSchema.index({ role: 1, createdAt: -1 });
 userSchema.index({ country: 1, city: 1, area: 1 });
+userSchema.index({ accountDisabledUntil: 1 });
 
 module.exports = mongoose.model("User", userSchema);

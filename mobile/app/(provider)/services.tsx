@@ -3,7 +3,15 @@ import * as ImagePicker from "expo-image-picker";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { DashboardCard } from "../../src/components/DashboardCard";
 import { LogoLoader } from "../../src/components/BrandLogo";
 import { LoadingScreen } from "../../src/components/LoadingScreen";
@@ -37,6 +45,7 @@ type TopServiceMetric = {
 };
 
 export default function ProviderServicesScreen() {
+  const { width } = useWindowDimensions();
   const queryClient = useQueryClient();
   const params = useLocalSearchParams<{ action?: string; intent?: string }>();
   const action = Array.isArray(params.action) ? params.action[0] : params.action;
@@ -280,6 +289,7 @@ export default function ProviderServicesScreen() {
   const isTopServicesLoading = isBusinessProfile
     ? businessStatsQuery.isLoading
     : bookingsQuery.isLoading;
+  const isCompactLayout = width < 380;
 
   return (
     <Screen>
@@ -299,21 +309,25 @@ export default function ProviderServicesScreen() {
 
       <View style={styles.statsGrid}>
         <StatCard
+          compact={isCompactLayout}
           icon="list-outline"
           label="Total services"
           value={String(services.length)}
         />
         <StatCard
+          compact={isCompactLayout}
           icon="checkmark-circle-outline"
           label="Active"
           value={String(activeCount)}
         />
         <StatCard
+          compact={isCompactLayout}
           icon="calendar-outline"
           label="Bookings"
           value={String(bookingCount)}
         />
         <StatCard
+          compact={isCompactLayout}
           icon="pricetag-outline"
           label="Avg price"
           value={activeCount ? formatMoney(averagePrice, services[0]?.currency) : "0"}
@@ -373,8 +387,18 @@ export default function ProviderServicesScreen() {
             })}
           </View>
 
-          <View style={styles.formGrid}>
-            <View style={styles.formColumn}>
+          <View
+            style={[
+              styles.formGrid,
+              isCompactLayout ? styles.formGridStack : null,
+            ]}
+          >
+            <View
+              style={[
+                styles.formColumn,
+                isCompactLayout ? styles.formColumnFull : null,
+              ]}
+            >
               <TextField
                 keyboardType="numeric"
                 label="Price"
@@ -383,7 +407,12 @@ export default function ProviderServicesScreen() {
                 value={price}
               />
             </View>
-            <View style={styles.formColumn}>
+            <View
+              style={[
+                styles.formColumn,
+                isCompactLayout ? styles.formColumnFull : null,
+              ]}
+            >
               <TextField
                 keyboardType="numeric"
                 label="Duration"
@@ -516,14 +545,15 @@ const getTopServicesFromBookings = (
 };
 
 type StatCardProps = {
+  compact?: boolean;
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
 };
 
-function StatCard({ icon, label, value }: StatCardProps) {
+function StatCard({ compact = false, icon, label, value }: StatCardProps) {
   return (
-    <View style={styles.statCard}>
+    <View style={[styles.statCard, compact ? styles.statCardCompact : null]}>
       <Ionicons color={colors.primary} name={icon} size={20} />
       <Text style={styles.statValue}>{value}</Text>
       <Text style={styles.statLabel}>{label}</Text>
@@ -647,14 +677,15 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   statCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     flexBasis: "47%",
     flexGrow: 1,
     gap: 4,
-    padding: spacing.md,
+    minWidth: 150,
+    paddingVertical: spacing.xs,
+  },
+  statCardCompact: {
+    flexBasis: "100%",
+    minWidth: "100%",
   },
   statValue: {
     color: colors.text,
@@ -734,8 +765,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: spacing.sm,
   },
+  formGridStack: {
+    flexDirection: "column",
+  },
   formColumn: {
     flex: 1,
+  },
+  formColumnFull: {
+    width: "100%",
   },
   descriptionInput: {
     minHeight: 96,

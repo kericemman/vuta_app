@@ -52,12 +52,12 @@ export function CategoryScroller({
 
 const styles = StyleSheet.create({
   scroller: {
-    marginHorizontal: -spacing.lg,
+    marginHorizontal: -spacing.sm,
   },
   content: {
     flexDirection: "row",
     gap: spacing.sm,
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.sm,
   },
   item: {
     alignItems: "center",

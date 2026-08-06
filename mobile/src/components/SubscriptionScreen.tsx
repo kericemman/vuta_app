@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { BackButton } from "./BackButton";
 import { PrimaryButton } from "./PrimaryButton";
 import { Screen } from "./Screen";
-import { colors, radii, spacing } from "../constants/theme";
+import { colors, spacing } from "../constants/theme";
 import { useAuthStore } from "../store/auth.store";
 
 export function SubscriptionScreen() {
@@ -74,12 +74,8 @@ const styles = StyleSheet.create({
   },
   card: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
-    borderWidth: 1,
     gap: spacing.sm,
-    padding: spacing.lg,
+    paddingVertical: spacing.sm,
   },
   iconBadge: {
     alignItems: "center",

@@ -187,15 +187,24 @@ export default function ClientHomeScreen() {
   };
 
   if (isOpeningHome) {
-    return <LoadingScreen label="Loading marketplace..." />;
+    return <LoadingScreen label="Loading marketplace..." showBackButton={false} />;
   }
 
   return (
-    <Screen>
+    <Screen showBackButton={false}>
       <View style={styles.header}>
-        <View>
-          <Text style={styles.title}>Hello, {firstName}</Text>
-          <Text style={styles.location}>{marketplaceLocation.label}</Text>
+        <View style={styles.headerCopy}>
+          <Text
+            adjustsFontSizeToFit
+            minimumFontScale={0.78}
+            numberOfLines={1}
+            style={styles.title}
+          >
+            Hello, {firstName}
+          </Text>
+          <Text numberOfLines={2} style={styles.location}>
+            Book your next beauty experience with trusted professionals.
+          </Text>
         </View>
         <Pressable
           accessibilityLabel="Open notifications"
@@ -271,9 +280,14 @@ export default function ClientHomeScreen() {
         <HorizontalRail>
           {providers.map((provider) => (
             <ProviderCard
+              isSaved={isSavedProvider(provider._id)}
+              isSaving={isSavingProvider(provider._id)}
               key={provider._id}
               onPress={() => openProviderDetails(provider._id)}
+              onToggleSave={() => toggleSavedProvider(provider._id)}
               provider={provider}
+              saveDisabled={!canSaveProvider(provider._id)}
+              variant="plain"
             />
           ))}
         </HorizontalRail>
@@ -406,6 +420,7 @@ export default function ClientHomeScreen() {
                 key={provider._id}
                 onPress={() => openProviderDetails(provider._id)}
                 provider={provider}
+                variant="plain"
               />
             ))}
           </HorizontalRail>
@@ -606,17 +621,26 @@ const styles = StyleSheet.create({
   header: {
     alignItems: "flex-start",
     flexDirection: "row",
+    gap: spacing.sm,
     justifyContent: "space-between",
     marginTop: spacing.lg,
   },
+  headerCopy: {
+    flex: 1,
+    minWidth: 0,
+    paddingRight: spacing.xs,
+  },
   title: {
     color: colors.text,
-    fontSize: 30,
+    flexShrink: 1,
+    fontSize: 24,
     fontWeight: "800",
+    lineHeight: 30,
   },
   location: {
     color: colors.muted,
     fontSize: 14,
+    lineHeight: 20,
     marginTop: spacing.xs,
   },
   notification: {
@@ -625,6 +649,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: 24,
     borderWidth: 1,
+    flexShrink: 0,
     height: 48,
     justifyContent: "center",
     marginTop: spacing.sm,
@@ -659,7 +684,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: spacing.sm,
     minHeight: 58,
-    paddingLeft: spacing.lg,
+    paddingLeft: spacing.md,
     paddingRight: spacing.xs,
   },
   searchInput: {
@@ -688,19 +713,15 @@ const styles = StyleSheet.create({
     color: colors.surface,
   },
   rail: {
-    marginHorizontal: -spacing.lg,
+    marginHorizontal: -spacing.sm,
   },
   railContent: {
     flexDirection: "row",
     gap: spacing.sm,
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.sm,
   },
   emptyState: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    padding: spacing.md,
+    paddingVertical: spacing.sm,
   },
   emptyText: {
     color: colors.muted,
@@ -709,24 +730,16 @@ const styles = StyleSheet.create({
   },
   bookingCard: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
-    borderWidth: 1,
     flexDirection: "row",
     gap: spacing.md,
-    padding: spacing.md,
+    paddingVertical: spacing.sm,
   },
   upcomingList: {
     gap: spacing.sm,
   },
   upcomingCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
-    borderWidth: 1,
     gap: spacing.sm,
-    padding: spacing.md,
+    paddingVertical: spacing.sm,
   },
   upcomingHeader: {
     alignItems: "center",

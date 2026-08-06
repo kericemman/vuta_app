@@ -40,7 +40,7 @@ export const logoutRequest = async (refreshToken: string) => {
 
 export const forgotPasswordRequest = async (identifier: string) => {
   const response = await api.post<{
-    devResetToken?: string;
+    devResetCode?: string;
     message?: string;
     success: boolean;
   }>("/auth/forgot-password", {
@@ -51,7 +51,7 @@ export const forgotPasswordRequest = async (identifier: string) => {
 };
 
 export const resetPasswordRequest = async (
-  token: string,
+  code: string,
   password: string
 ) => {
   const response = await api.post<{
@@ -59,7 +59,7 @@ export const resetPasswordRequest = async (
     success: boolean;
   }>("/auth/reset-password", {
     password,
-    token,
+    token: code,
   });
 
   return response.data;

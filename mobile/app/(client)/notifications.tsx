@@ -6,7 +6,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { BackButton } from "../../src/components/BackButton";
 import { LoadingScreen } from "../../src/components/LoadingScreen";
 import { Screen } from "../../src/components/Screen";
-import { colors, radii, spacing } from "../../src/constants/theme";
+import { colors, spacing } from "../../src/constants/theme";
 import {
   listNotifications,
   markAllNotificationsRead,
@@ -131,44 +131,45 @@ export default function ClientNotificationsScreen() {
       ) : null}
 
       <View style={styles.list}>
-        {notifications.map((notification) => (
-          <Pressable
-            disabled={isLoading}
-            key={notification.id}
-            onPress={() => handleNotificationPress(notification)}
-            style={({ pressed }) => [
-              styles.notificationCard,
-              !notification.readAt ? styles.unreadCard : null,
-              pressed ? styles.notificationCardPressed : null,
-            ]}
-          >
-            <View
-              style={[
-                styles.typeIcon,
-                !notification.readAt ? styles.unreadTypeIcon : null,
+        {notifications.map((notification, index) => (
+          <View key={notification.id}>
+            {index === 0 ? <View style={styles.sectionDivider} /> : null}
+            <Pressable
+              disabled={isLoading}
+              onPress={() => handleNotificationPress(notification)}
+              style={({ pressed }) => [
+                styles.notificationCard,
+                pressed ? styles.notificationCardPressed : null,
               ]}
             >
-              <Ionicons
-                color={!notification.readAt ? colors.surface : colors.primary}
-                name={getNotificationIcon(notification.type)}
-                size={20}
-              />
-            </View>
-            <View style={styles.notificationCopy}>
-              <View style={styles.notificationTitleRow}>
-                <Text style={styles.notificationTitle}>
-                  {notification.title}
-                </Text>
-                {!notification.readAt ? <View style={styles.unreadDot} /> : null}
+              <View
+                style={[
+                  styles.typeIcon,
+                  !notification.readAt ? styles.unreadTypeIcon : null,
+                ]}
+              >
+                <Ionicons
+                  color={!notification.readAt ? colors.surface : colors.primary}
+                  name={getNotificationIcon(notification.type)}
+                  size={20}
+                />
               </View>
-              {notification.body ? (
-                <Text style={styles.notificationBody}>{notification.body}</Text>
-              ) : null}
-              <Text style={styles.notificationTime}>
-                {formatNotificationDate(notification.createdAt)}
-              </Text>
-            </View>
-          </Pressable>
+              <View style={styles.notificationCopy}>
+                <View style={styles.notificationTitleRow}>
+                  <Text style={styles.notificationTitle}>
+                    {notification.title}
+                  </Text>
+                  {!notification.readAt ? <View style={styles.unreadDot} /> : null}
+                </View>
+                {notification.body ? (
+                  <Text style={styles.notificationBody}>{notification.body}</Text>
+                ) : null}
+                <Text style={styles.notificationTime}>
+                  {formatNotificationDate(notification.createdAt)}
+                </Text>
+              </View>
+            </Pressable>
+          </View>
         ))}
       </View>
     </Screen>
@@ -247,10 +248,6 @@ const styles = StyleSheet.create({
   },
   emptyCard: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
-    borderWidth: 1,
     gap: spacing.sm,
     padding: spacing.lg,
   },
@@ -276,18 +273,16 @@ const styles = StyleSheet.create({
   list: {
     gap: spacing.sm,
   },
+  sectionDivider: {
+    backgroundColor: colors.border,
+    height: StyleSheet.hairlineWidth,
+    marginBottom: spacing.sm,
+  },
   notificationCard: {
     alignItems: "flex-start",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     flexDirection: "row",
     gap: spacing.md,
-    padding: spacing.md,
-  },
-  unreadCard: {
-    borderColor: colors.primary,
+    paddingVertical: spacing.md,
   },
   notificationCardPressed: {
     backgroundColor: colors.surfaceMuted,

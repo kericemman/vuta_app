@@ -15,7 +15,9 @@ import previewProfessional from "../assets/preview-professional.jpg";
 import WaitlistModal from "./WaitlistModal";
 
 const storeLinks = {
-  android: import.meta.env.VITE_ANDROID_APP_URL || "",
+  android:
+    import.meta.env.VITE_ANDROID_APP_URL ||
+    "https://play.google.com/store/apps/details?id=app.vuta.mobile",
   ios: import.meta.env.VITE_IOS_APP_URL || "",
 };
 

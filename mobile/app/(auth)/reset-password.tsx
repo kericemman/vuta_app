@@ -14,9 +14,9 @@ import { resetPasswordRequest } from "../../src/services/auth.service";
 
 const schema = z
   .object({
+    code: z.string().trim().regex(/^\d{6}$/, "Reset code must be 6 digits."),
     confirmPassword: z.string().min(8, "Confirm your new password."),
     password: z.string().min(8, "Password must be at least 8 characters."),
-    token: z.string().trim().min(1, "Reset code is required."),
   })
   .refine((values) => values.password === values.confirmPassword, {
     message: "Passwords do not match.",
@@ -26,8 +26,10 @@ const schema = z
 type ResetPasswordForm = z.infer<typeof schema>;
 
 export default function ResetPasswordScreen() {
-  const params = useLocalSearchParams<{ token?: string }>();
-  const resetToken = Array.isArray(params.token) ? params.token[0] : params.token;
+  const params = useLocalSearchParams<{ code?: string; token?: string }>();
+  const codeParam = Array.isArray(params.code) ? params.code[0] : params.code;
+  const tokenParam = Array.isArray(params.token) ? params.token[0] : params.token;
+  const resetCode = codeParam || tokenParam;
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const {
@@ -37,25 +39,25 @@ export default function ResetPasswordScreen() {
     formState: { errors, isSubmitting },
   } = useForm<ResetPasswordForm>({
     defaultValues: {
+      code: resetCode || "",
       confirmPassword: "",
       password: "",
-      token: resetToken || "",
     },
     resolver: zodResolver(schema),
   });
 
   useEffect(() => {
-    if (resetToken) {
-      setValue("token", resetToken);
+    if (resetCode) {
+      setValue("code", resetCode);
     }
-  }, [resetToken, setValue]);
+  }, [resetCode, setValue]);
 
   const onSubmit = handleSubmit(async (values) => {
     setError("");
     setMessage("");
 
     try {
-      const response = await resetPasswordRequest(values.token, values.password);
+      const response = await resetPasswordRequest(values.code, values.password);
       setMessage(response.message || "Password reset successfully.");
       setTimeout(() => router.replace("/(auth)/login"), 900);
     } catch (resetError) {
@@ -75,15 +77,20 @@ export default function ResetPasswordScreen() {
 
       <Controller
         control={control}
-        name="token"
+        name="code"
         render={({ field }) => (
           <TextField
             autoCapitalize="none"
-            error={errors.token?.message}
+            autoComplete="one-time-code"
+            error={errors.code?.message}
+            keyboardType="number-pad"
             label="Reset code"
+            maxLength={6}
             onBlur={field.onBlur}
-            onChangeText={field.onChange}
-            placeholder="Paste reset code"
+            onChangeText={(value) =>
+              field.onChange(value.replace(/\D/g, "").slice(0, 6))
+            }
+            placeholder="6-digit code"
             value={field.value}
           />
         )}

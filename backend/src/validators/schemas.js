@@ -116,7 +116,10 @@ const authSchemas = {
   },
   resetPassword: {
     body: z.object({
-      token: nonEmptyString("Reset token is required."),
+      token: z
+        .string()
+        .trim()
+        .regex(/^\d{6}$/, "Reset code must be 6 digits."),
       password: z.string().min(8, "Password must be at least 8 characters."),
     }),
   },

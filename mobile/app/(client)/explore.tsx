@@ -38,7 +38,7 @@ import {
 } from "../../src/utils/marketplace";
 
 const EXPLORE_LIMIT = 20;
-const SCREEN_HORIZONTAL_PADDING = spacing.lg * 2;
+const SCREEN_HORIZONTAL_PADDING = spacing.sm * 2;
 
 const openProviderDetails = (providerId: string) =>
   router.push({
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: spacing.sm,
     minHeight: 58,
-    paddingLeft: spacing.lg,
+    paddingLeft: spacing.md,
     paddingRight: spacing.xs,
   },
   searchInput: {
@@ -298,14 +298,10 @@ const styles = StyleSheet.create({
   serviceRail: {
     flexDirection: "row",
     gap: spacing.sm,
-    paddingRight: spacing.lg,
+    paddingRight: spacing.md,
   },
   emptyState: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    padding: spacing.md,
+    paddingVertical: spacing.sm,
   },
   emptyText: {
     color: colors.muted,

@@ -60,14 +60,10 @@ export function LocationSignal({
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     flexDirection: "row",
     gap: spacing.sm,
     justifyContent: "space-between",
-    padding: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   copy: {
     alignItems: "center",

@@ -99,6 +99,7 @@ export function ChatThread() {
           </View>
         </View>
       }
+      keyboardVerticalOffset={0}
       scroll={false}
     >
       <ScrollView
@@ -138,6 +139,11 @@ export function ChatThread() {
           editable={!isSending}
           multiline
           onChangeText={setBody}
+          onFocus={() =>
+            requestAnimationFrame(() =>
+              scrollViewRef.current?.scrollToEnd({ animated: true })
+            )
+          }
           placeholder="Type your message"
           placeholderTextColor={colors.muted}
           style={styles.input}
@@ -250,12 +256,8 @@ const styles = StyleSheet.create({
   },
   emptyCard: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     gap: spacing.sm,
-    padding: spacing.lg,
+    paddingVertical: spacing.lg,
   },
   emptyText: {
     color: colors.muted,
@@ -275,8 +277,6 @@ const styles = StyleSheet.create({
   },
   theirBubble: {
     backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderWidth: 1,
   },
   myBubble: {
     backgroundColor: colors.primary,
@@ -323,13 +323,9 @@ const styles = StyleSheet.create({
   },
   composer: {
     alignItems: "flex-end",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     flexDirection: "row",
     gap: spacing.sm,
-    padding: spacing.sm,
+    paddingTop: spacing.sm,
   },
   input: {
     color: colors.text,
@@ -339,6 +335,7 @@ const styles = StyleSheet.create({
     minHeight: 40,
     paddingHorizontal: spacing.xs,
     paddingVertical: spacing.xs,
+    textAlignVertical: "top",
   },
   sendButton: {
     alignItems: "center",

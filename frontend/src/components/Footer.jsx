@@ -9,6 +9,7 @@ const footerLinks = [
   { href: "/#preview", label: "App Preview" },
   { href: "/pricing", label: "Pricing" },
   { href: "/download", label: "Download App" },
+  { href: "/forgot-password", label: "Forgot Password" },
   { href: "/become-a-partner", label: "Become a Partner" },
 ];
 

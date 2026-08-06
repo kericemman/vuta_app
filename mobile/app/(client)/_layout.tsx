@@ -33,6 +33,7 @@ export default function ClientLayout() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
+        tabBarHideOnKeyboard: true,
         tabBarInactiveTintColor: colors.muted,
       }}
     >
@@ -152,6 +153,7 @@ export default function ClientLayout() {
         name="chat/[id]"
         options={{
           href: null,
+          tabBarStyle: styles.hiddenTabBar,
         }}
       />
     </Tabs>
@@ -159,6 +161,9 @@ export default function ClientLayout() {
 }
 
 const styles = StyleSheet.create({
+  hiddenTabBar: {
+    display: "none",
+  },
   tabBarBadge: {
     backgroundColor: colors.cta,
     color: colors.surface,

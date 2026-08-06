@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { BackButton } from "./BackButton";
 import { Screen } from "./Screen";
-import { colors, radii, spacing } from "../constants/theme";
+import { colors, spacing } from "../constants/theme";
 import { useUpdateUnreadCount } from "../hooks/useUpdateUnreadCount";
 import { getApiErrorMessage } from "../services/api";
 import { deleteMeRequest } from "../services/user.service";
@@ -62,6 +62,7 @@ export function AccountSettingsScreen() {
 
   return (
     <Screen
+      contentStyle={styles.screenContent}
       fixedHeader={
         <View style={styles.header}>
           <BackButton />
@@ -92,6 +93,7 @@ export function AccountSettingsScreen() {
       </Pressable>
 
       <View style={styles.menuCard}>
+        <View style={styles.sectionDivider} />
         {isProvider ? (
           <SettingsMenuItem
             icon="card-outline"
@@ -120,6 +122,7 @@ export function AccountSettingsScreen() {
       </View>
 
       <View style={styles.menuCard}>
+        <View style={styles.sectionDivider} />
         <SettingsMenuItem
           icon="log-out-outline"
           label={t("account.logout")}
@@ -192,6 +195,9 @@ function SettingsMenuItem({
 }
 
 const styles = StyleSheet.create({
+  screenContent: {
+    paddingHorizontal: spacing.sm,
+  },
   header: {
     alignItems: "center",
     flexDirection: "row",
@@ -212,13 +218,9 @@ const styles = StyleSheet.create({
   },
   profileCard: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
-    borderWidth: 1,
     flexDirection: "row",
     gap: spacing.md,
-    padding: spacing.md,
+    paddingVertical: spacing.xs,
   },
   pressed: {
     opacity: 0.7,
@@ -245,20 +247,17 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   menuCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
-    borderWidth: 1,
-    gap: spacing.xs,
-    padding: spacing.sm,
+    gap: spacing.sm,
+  },
+  sectionDivider: {
+    backgroundColor: colors.border,
+    height: StyleSheet.hairlineWidth,
   },
   menuItem: {
     alignItems: "center",
-    borderRadius: radii.md,
     flexDirection: "row",
     gap: spacing.md,
     minHeight: 62,
-    paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
   },
   menuIcon: {

@@ -1,6 +1,7 @@
 import { ReactNode, useCallback, useRef } from "react";
 import { useFocusEffect } from "expo-router";
 import {
+  KeyboardAvoidingViewProps,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -21,6 +22,8 @@ type ScreenProps = {
   scroll?: boolean;
   scrollContentStyle?: StyleProp<ViewStyle>;
   showBackButton?: boolean;
+  keyboardBehavior?: KeyboardAvoidingViewProps["behavior"];
+  keyboardVerticalOffset?: number;
 };
 
 export function Screen({
@@ -31,9 +34,13 @@ export function Screen({
   scroll = true,
   scrollContentStyle,
   showBackButton = true,
+  keyboardBehavior,
+  keyboardVerticalOffset = 0,
 }: ScreenProps) {
   const scrollViewRef = useRef<ScrollView>(null);
   const stickyHeader = fixedHeader ?? (showBackButton ? <BackButton /> : null);
+  const resolvedKeyboardBehavior =
+    keyboardBehavior ?? (Platform.OS === "ios" ? "padding" : "height");
 
   useFocusEffect(
     useCallback(() => {
@@ -64,7 +71,8 @@ export function Screen({
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        behavior={resolvedKeyboardBehavior}
+        keyboardVerticalOffset={keyboardVerticalOffset}
         style={styles.keyboard}
       >
         {stickyHeader ? (
@@ -97,7 +105,7 @@ const styles = StyleSheet.create({
   fixedHeader: {
     backgroundColor: colors.background,
     paddingBottom: spacing.xs,
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.sm,
     paddingTop: spacing.md,
   },
   scrollContent: {
@@ -106,7 +114,8 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     gap: spacing.md,
-    padding: spacing.lg,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.lg,
   },
   contentAfterFixedHeader: {
     paddingTop: spacing.sm,

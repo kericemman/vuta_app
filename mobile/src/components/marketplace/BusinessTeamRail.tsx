@@ -94,10 +94,7 @@ const styles = StyleSheet.create({
   },
   card: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
     borderRadius: radii.md,
-    borderWidth: 1,
     gap: 4,
     minHeight: 128,
     padding: spacing.sm,
@@ -105,7 +102,6 @@ const styles = StyleSheet.create({
   },
   selectedCard: {
     backgroundColor: colors.primary,
-    borderColor: colors.primary,
   },
   pressedCard: {
     opacity: 0.88,

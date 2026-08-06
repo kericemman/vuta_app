@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { LoadingScreen } from "../LoadingScreen";
 import { Screen } from "../Screen";
-import { colors, radii, spacing } from "../../constants/theme";
+import { colors, spacing } from "../../constants/theme";
 import { listConversations } from "../../services/message.service";
 import { ConversationSummary } from "../../types/message";
 
@@ -40,7 +40,7 @@ export function ConversationInbox({ routePrefix }: ConversationInboxProps) {
         <Text style={styles.subtitle}>
           {unreadTotal
             ? `${unreadTotal} unread message${unreadTotal === 1 ? "" : "s"}`
-            : "Conversations with clients and beauty profiles"}
+            : "Keep your bookings and beauty conversations in one place."}
         </Text>
       </View>
 
@@ -58,6 +58,7 @@ export function ConversationInbox({ routePrefix }: ConversationInboxProps) {
       ) : null}
 
       <View style={styles.list}>
+        {conversations.length ? <View style={styles.sectionDivider} /> : null}
         {conversations.map((conversation) => (
           <ConversationRow
             conversation={conversation}
@@ -203,12 +204,8 @@ const styles = StyleSheet.create({
   },
   emptyCard: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     gap: spacing.sm,
-    padding: spacing.lg,
+    paddingVertical: spacing.lg,
   },
   emptyIcon: {
     alignItems: "center",
@@ -232,18 +229,19 @@ const styles = StyleSheet.create({
   list: {
     gap: spacing.sm,
   },
+  sectionDivider: {
+    backgroundColor: colors.border,
+    height: StyleSheet.hairlineWidth,
+  },
   row: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     flexDirection: "row",
     gap: spacing.sm,
-    padding: spacing.md,
+    paddingVertical: spacing.md,
   },
   unreadRow: {
-    borderColor: colors.primary,
+    marginHorizontal: -spacing.sm,
+    paddingHorizontal: spacing.sm,
   },
   rowPressed: {
     opacity: 0.78,

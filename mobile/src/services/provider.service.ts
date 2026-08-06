@@ -167,6 +167,7 @@ export const uploadBusinessEmployeeImage = async (
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      timeout: 60000,
     }
   );
 
@@ -198,6 +199,7 @@ export const uploadPortfolioImage = async (
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      timeout: 60000,
     }
   );
 
@@ -225,6 +227,7 @@ export const uploadServiceImage = async (
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      timeout: 60000,
     }
   );
 

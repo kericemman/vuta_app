@@ -198,7 +198,7 @@ export default function ClientProviderDetailsScreen() {
         />
         <StatCard label="Services" value={String(services.length)} />
         <StatCard
-          label="Distance"
+          label="Location"
           value={distance || (provider.city ? provider.city : "Open")}
         />
       </View>
@@ -471,14 +471,10 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   statCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     flex: 1,
     gap: 3,
-    minHeight: 70,
-    padding: spacing.sm,
+    minHeight: 52,
+    paddingVertical: spacing.xs,
   },
   statValue: {
     color: colors.text,
@@ -504,12 +500,8 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   reviewCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     gap: spacing.xs,
-    padding: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   reviewHeader: {
     alignItems: "center",
@@ -533,12 +525,8 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   emptyState: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     gap: spacing.xs,
-    padding: spacing.md,
+    paddingVertical: spacing.sm,
   },
   emptyTitle: {
     color: colors.text,

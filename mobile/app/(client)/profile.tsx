@@ -12,12 +12,11 @@ import {
   View,
 } from "react-native";
 import { AppVersionText } from "../../src/components/AppVersionText";
-import { DashboardCard } from "../../src/components/DashboardCard";
 import { PrimaryButton } from "../../src/components/PrimaryButton";
 import { Screen } from "../../src/components/Screen";
 import { TextField } from "../../src/components/TextField";
 import { VUTA_DOWNLOAD_URL } from "../../src/constants/links";
-import { colors, radii, spacing } from "../../src/constants/theme";
+import { colors, spacing } from "../../src/constants/theme";
 import { useUpdateUnreadCount } from "../../src/hooks/useUpdateUnreadCount";
 import { getApiErrorMessage } from "../../src/services/api";
 import {
@@ -131,7 +130,7 @@ export default function ClientProfileScreen() {
   };
 
   return (
-    <Screen>
+    <Screen contentStyle={styles.screenContent}>
       <View style={styles.header}>
         <View style={styles.identityRow}>
           <Pressable onPress={pickProfileImage} style={styles.avatarButton}>
@@ -174,9 +173,12 @@ export default function ClientProfileScreen() {
           </Pressable>
         </View>
       </View>
+      <View style={styles.sectionDivider} />
 
       {isEditing ? (
-        <DashboardCard title={t("profile.editAccount")}>
+        <View style={styles.editSection}>
+          <Text style={styles.sectionTitle}>{t("profile.editAccount")}</Text>
+          <View style={styles.sectionDivider} />
           <TextField label={t("auth.fullName")} onChangeText={setName} value={name} />
           <TextField
             editable={false}
@@ -200,13 +202,14 @@ export default function ClientProfileScreen() {
             loading={isSaving}
             onPress={saveProfile}
           />
-        </DashboardCard>
+        </View>
       ) : null}
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
       {message ? <Text style={styles.success}>{message}</Text> : null}
 
       <View style={styles.menu}>
+        <View style={styles.sectionDivider} />
         <ProfileMenuItem
           icon="sparkles-outline"
           label={t("profile.beautyPreferences")}
@@ -295,6 +298,9 @@ function ProfileMenuItem({
 }
 
 const styles = StyleSheet.create({
+  screenContent: {
+    paddingHorizontal: spacing.sm,
+  },
   header: {
     marginTop: spacing.lg,
   },
@@ -391,20 +397,26 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   menu: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
-    borderWidth: 1,
-    overflow: "hidden",
+    gap: spacing.sm,
+  },
+  editSection: {
+    gap: spacing.sm,
+  },
+  sectionTitle: {
+    color: colors.text,
+    fontSize: 17,
+    fontWeight: "600",
+  },
+  sectionDivider: {
+    backgroundColor: colors.border,
+    height: StyleSheet.hairlineWidth,
   },
   menuItem: {
     alignItems: "center",
-    borderBottomColor: colors.border,
-    borderBottomWidth: 1,
     flexDirection: "row",
     gap: spacing.md,
     minHeight: 58,
-    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
   },
   menuIcon: {
     alignItems: "center",

@@ -98,6 +98,7 @@ export const resources = {
       profile: {
         account: "Account",
         accountAccessSafety: "Account access and safety",
+        addEmployee: "Add employee",
         beautyPreferences: "Beauty preferences",
         businessStatistics: "Business statistics",
         businessStatsSummary: "{{revenue}} this month, {{saves}} saves",
@@ -273,6 +274,7 @@ export const resources = {
       profile: {
         account: "Akaunti",
         accountAccessSafety: "Ufikiaji na usalama wa akaunti",
+        addEmployee: "Ongeza mfanyakazi",
         beautyPreferences: "Mapendeleo ya urembo",
         businessStatistics: "Takwimu za biashara",
         businessStatsSummary: "{{revenue}} mwezi huu, hifadhi {{saves}}",
@@ -450,6 +452,7 @@ export const resources = {
       profile: {
         account: "Compte",
         accountAccessSafety: "Acces et securite du compte",
+        addEmployee: "Ajouter un employe",
         beautyPreferences: "Preferences beaute",
         businessStatistics: "Statistiques de l'entreprise",
         businessStatsSummary: "{{revenue}} ce mois-ci, {{saves}} favoris",
@@ -630,6 +633,7 @@ export const resources = {
       profile: {
         account: "الحساب",
         accountAccessSafety: "الوصول إلى الحساب والأمان",
+        addEmployee: "إضافة موظف",
         beautyPreferences: "تفضيلات الجمال",
         businessStatistics: "إحصاءات الشركة",
         businessStatsSummary: "{{revenue}} هذا الشهر، {{saves}} حفظ",
@@ -806,6 +810,7 @@ export const resources = {
       profile: {
         account: "Conta",
         accountAccessSafety: "Acesso e seguranca da conta",
+        addEmployee: "Adicionar funcionario",
         beautyPreferences: "Preferencias de beleza",
         businessStatistics: "Estatisticas do negocio",
         businessStatsSummary: "{{revenue}} este mes, {{saves}} guardados",

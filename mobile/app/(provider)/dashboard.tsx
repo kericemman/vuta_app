@@ -1,7 +1,15 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { Alert, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { DashboardCard } from "../../src/components/DashboardCard";
 import { LogoLoader } from "../../src/components/BrandLogo";
 import { LoadingScreen } from "../../src/components/LoadingScreen";
@@ -31,6 +39,7 @@ import {
 } from "../../src/utils/provider";
 
 export default function ProviderDashboardScreen() {
+  const { width } = useWindowDimensions();
   const queryClient = useQueryClient();
   const user = useAuthStore((state) => state.user);
   const isBusiness = user?.role === "beauty_business";
@@ -101,6 +110,7 @@ export default function ProviderDashboardScreen() {
   const location = getProviderLocation(profile, user);
   const firstName = displayName.split(" ")[0] || "there";
   const imageUrl = user?.profileImage || profile?.user?.profileImage;
+  const isCompactLayout = width < 380;
 
   const toggleAvailability = () => {
     if (!profile) {
@@ -129,7 +139,12 @@ export default function ProviderDashboardScreen() {
             </View>
           )}
           <View style={styles.identityCopy}>
-            <Text style={styles.title}>
+            <Text
+              adjustsFontSizeToFit
+              minimumFontScale={0.76}
+              numberOfLines={1}
+              style={styles.title}
+            >
               {greeting}, {firstName}
             </Text>
             <Text style={styles.subtitle}>
@@ -215,16 +230,19 @@ export default function ProviderDashboardScreen() {
 
       <View style={styles.metricsGrid}>
         <MetricCard
+          compact={isCompactLayout}
           icon="calendar-outline"
           label="Today's bookings"
           value={String(summary.todayBookings)}
         />
         <MetricCard
+          compact={isCompactLayout}
           icon="wallet-outline"
           label="Earnings today"
           value={formatMoney(summary.todayEarnings)}
         />
         <MetricCard
+          compact={isCompactLayout}
           icon="person-add-outline"
           label="New requests"
           value={String(summary.pendingRequests)}
@@ -291,17 +309,20 @@ export default function ProviderDashboardScreen() {
 
       <View style={styles.quickActions}>
         <QuickAction
+          compact={isCompactLayout}
           icon="add-circle-outline"
           label="Add Service"
           onPress={() => router.push("/(provider)/services")}
           primary
         />
         <QuickAction
+          compact={isCompactLayout}
           icon="calendar-outline"
           label="Bookings"
           onPress={() => router.push("/(provider)/bookings")}
         />
         <QuickAction
+          compact={isCompactLayout}
           icon={isBusiness ? "people-outline" : "images-outline"}
           label={isBusiness ? "Team" : "Portfolio"}
           onPress={() =>
@@ -309,6 +330,7 @@ export default function ProviderDashboardScreen() {
           }
         />
         <QuickAction
+          compact={isCompactLayout}
           icon="person-outline"
           label="Profile"
           onPress={() => router.push("/(provider)/profile")}
@@ -317,21 +339,25 @@ export default function ProviderDashboardScreen() {
 
       <View style={styles.insightsGrid}>
         <InsightCard
+          compact={isCompactLayout}
           icon="star"
           label="Rating"
           value={(profile?.averageRating || 0).toFixed(1)}
         />
         <InsightCard
+          compact={isCompactLayout}
           icon="chatbox-ellipses-outline"
           label="Reviews"
           value={String(profile?.reviewCount || 0)}
         />
         <InsightCard
+          compact={isCompactLayout}
           icon="cut-outline"
           label="Active services"
           value={String(businessStats?.counts.activeServices ?? activeServices.length)}
         />
         <InsightCard
+          compact={isCompactLayout}
           icon={isBusiness ? "people-outline" : "images-outline"}
           label={isBusiness ? "Bookable staff" : "Portfolio"}
           value={String(
@@ -360,14 +386,15 @@ function getTimeGreeting() {
 }
 
 type MetricCardProps = {
+  compact?: boolean;
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
 };
 
-function MetricCard({ icon, label, value }: MetricCardProps) {
+function MetricCard({ compact = false, icon, label, value }: MetricCardProps) {
   return (
-    <View style={styles.metricCard}>
+    <View style={[styles.metricCard, compact ? styles.fullWidthCard : null]}>
       <View style={styles.metricIcon}>
         <Ionicons color={colors.primary} name={icon} size={20} />
       </View>
@@ -463,17 +490,28 @@ function BookingRow({ booking }: BookingRowProps) {
 }
 
 type QuickActionProps = {
+  compact?: boolean;
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   onPress: () => void;
   primary?: boolean;
 };
 
-function QuickAction({ icon, label, onPress, primary = false }: QuickActionProps) {
+function QuickAction({
+  compact = false,
+  icon,
+  label,
+  onPress,
+  primary = false,
+}: QuickActionProps) {
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.quickAction, primary ? styles.primaryAction : null]}
+      style={[
+        styles.quickAction,
+        compact ? styles.fullWidthCard : null,
+        primary ? styles.primaryAction : null,
+      ]}
     >
       <Ionicons
         color={primary ? colors.surface : colors.primary}
@@ -488,14 +526,15 @@ function QuickAction({ icon, label, onPress, primary = false }: QuickActionProps
 }
 
 type InsightCardProps = {
+  compact?: boolean;
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
 };
 
-function InsightCard({ icon, label, value }: InsightCardProps) {
+function InsightCard({ compact = false, icon, label, value }: InsightCardProps) {
   return (
-    <View style={styles.insightCard}>
+    <View style={[styles.insightCard, compact ? styles.fullWidthCard : null]}>
       <Ionicons color={colors.premium} name={icon} size={20} />
       <Text style={styles.insightValue}>{value}</Text>
       <Text style={styles.insightLabel}>{label}</Text>
@@ -539,9 +578,10 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.text,
-    fontSize: 28,
+    flexShrink: 1,
+    fontSize: 23,
     fontWeight: "900",
-    lineHeight: 34,
+    lineHeight: 29,
   },
   subtitle: {
     color: colors.text,
@@ -643,6 +683,7 @@ const styles = StyleSheet.create({
   },
   metricsGrid: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: spacing.sm,
   },
   metricCard: {
@@ -652,8 +693,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flex: 1,
     gap: spacing.xs,
+    minWidth: 104,
     minHeight: 128,
     padding: spacing.sm,
+  },
+  fullWidthCard: {
+    width: "100%",
   },
   metricIcon: {
     alignItems: "center",
@@ -799,6 +844,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     minHeight: 88,
     padding: spacing.sm,
+    minWidth: 150,
     width: "48.5%",
   },
   primaryAction: {
@@ -826,6 +872,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: 3,
     minHeight: 90,
+    minWidth: 150,
     padding: spacing.md,
     width: "48.5%",
   },

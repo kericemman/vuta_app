@@ -5,7 +5,7 @@ import { BackButton } from "../../src/components/BackButton";
 import { PrimaryButton } from "../../src/components/PrimaryButton";
 import { Screen } from "../../src/components/Screen";
 import { clientPreferenceOptions } from "../../src/constants/marketplace";
-import { colors, radii, spacing } from "../../src/constants/theme";
+import { colors, spacing } from "../../src/constants/theme";
 import { getApiErrorMessage } from "../../src/services/api";
 import { updateMeRequest } from "../../src/services/user.service";
 import { useAuthStore } from "../../src/store/auth.store";
@@ -126,11 +126,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   card: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
-    borderWidth: 1,
-    padding: spacing.md,
+    paddingVertical: spacing.xs,
   },
   preferenceGrid: {
     flexDirection: "row",

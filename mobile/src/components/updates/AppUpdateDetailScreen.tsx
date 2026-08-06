@@ -263,10 +263,6 @@ const styles = StyleSheet.create({
   },
   emptyCard: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
-    borderWidth: 1,
     gap: spacing.sm,
     padding: spacing.lg,
   },
@@ -314,13 +310,9 @@ const styles = StyleSheet.create({
   },
   videoButton: {
     alignItems: "center",
-    backgroundColor: colors.surfaceMuted,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     flexDirection: "row",
     gap: spacing.sm,
-    padding: spacing.md,
+    paddingVertical: spacing.sm,
   },
   videoButtonPressed: {
     opacity: 0.82,

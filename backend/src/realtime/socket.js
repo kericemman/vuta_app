@@ -1,5 +1,6 @@
 const { Server } = require("socket.io");
 const User = require("../models/User");
+const { assertUserCanAuthenticate } = require("../utils/accountAccess");
 const { verifyAccessToken } = require("../utils/tokens");
 
 const EVENTS = {
@@ -56,11 +57,11 @@ const initRealtime = (server, { allowedOrigins = [] } = {}) => {
       }
 
       const decoded = verifyAccessToken(token);
-      const user = await User.findById(decoded.id).select("_id role isActive");
+      const user = await User.findById(decoded.id).select(
+        "_id role isActive accountDisabledUntil accountDisabledReason"
+      );
 
-      if (!user || !user.isActive) {
-        throw new Error("Inactive user.");
-      }
+      await assertUserCanAuthenticate(user);
 
       socket.user = {
         id: user._id.toString(),

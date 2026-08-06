@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { ComponentProps } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { colors, radii, spacing } from "../constants/theme";
+import { colors, spacing } from "../constants/theme";
 import { ProviderBooking } from "../types/provider";
 import { formatBookingDate, formatMoney } from "../utils/provider";
 
@@ -160,12 +160,7 @@ const getStatusStyle = (status: ProviderBooking["status"]) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     gap: spacing.md,
-    padding: spacing.md,
   },
   heroRow: {
     alignItems: "center",

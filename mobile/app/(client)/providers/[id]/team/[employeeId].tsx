@@ -227,13 +227,9 @@ function BookingDetail({ icon, label, value }: BookingDetailProps) {
 const styles = StyleSheet.create({
   heroCard: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
-    borderWidth: 1,
     flexDirection: "row",
     gap: spacing.md,
-    padding: spacing.md,
+    paddingVertical: spacing.sm,
   },
   heroImage: {
     backgroundColor: colors.surfaceMuted,
@@ -308,12 +304,8 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
   bookingPanel: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     gap: spacing.sm,
-    padding: spacing.md,
+    paddingVertical: spacing.sm,
   },
   bookingDetail: {
     alignItems: "center",
@@ -345,20 +337,16 @@ const styles = StyleSheet.create({
   serviceRail: {
     flexDirection: "row",
     gap: spacing.sm,
-    paddingRight: spacing.lg,
+    paddingRight: spacing.md,
   },
   serviceList: {
     gap: spacing.sm,
   },
   serviceRow: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     flexDirection: "row",
     gap: spacing.sm,
-    padding: spacing.md,
+    paddingVertical: spacing.sm,
   },
   pressedRow: {
     opacity: 0.88,
@@ -392,12 +380,8 @@ const styles = StyleSheet.create({
     fontWeight: "900",
   },
   emptyState: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     gap: spacing.xs,
-    padding: spacing.md,
+    paddingVertical: spacing.sm,
   },
   emptyTitle: {
     color: colors.text,

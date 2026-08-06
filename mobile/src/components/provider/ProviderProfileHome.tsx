@@ -1,15 +1,24 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
+import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Image, Pressable, Share, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  Share,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { AppVersionText } from "../AppVersionText";
 import { DashboardCard } from "../DashboardCard";
 import { LoadingScreen } from "../LoadingScreen";
 import { PrimaryButton } from "../PrimaryButton";
 import { Screen } from "../Screen";
 import { VUTA_DOWNLOAD_URL } from "../../constants/links";
-import { colors, radii, spacing } from "../../constants/theme";
+import { colors, spacing } from "../../constants/theme";
 import { useUpdateUnreadCount } from "../../hooks/useUpdateUnreadCount";
 import {
   getBusinessStats,
@@ -36,6 +45,7 @@ type ProviderProfileHomeProps = {
 };
 
 function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
+  const { width } = useWindowDimensions();
   const { t } = useTranslation();
   const user = useAuthStore((state) => state.user);
   const updates = useUpdateUnreadCount();
@@ -74,6 +84,7 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
   const editRoute = isBusiness
     ? "/(provider)/business-profile"
     : "/(provider)/professional-profile";
+  const isCompactLayout = width < 380;
 
   const inviteFriend = async () => {
     await Share.share({
@@ -90,7 +101,7 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
   }
 
   return (
-    <Screen>
+    <Screen contentStyle={styles.screenContent}>
       <Pressable
         onPress={() => router.push(editRoute)}
         style={({ pressed }) => [
@@ -126,6 +137,7 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
           <Text style={styles.editText}>{t("actions.edit")}</Text>
         </View>
       </Pressable>
+      <View style={styles.sectionDivider} />
 
       {!profile ? (
         <DashboardCard
@@ -152,11 +164,13 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
       ) : (
         <View style={styles.statusGrid}>
           <StatTile
+            compact={isCompactLayout}
             label={t("profile.profileStrength")}
             value={`${completion}%`}
             icon="shield-checkmark-outline"
           />
           <StatTile
+            compact={isCompactLayout}
             label={isBusiness ? t("profile.services") : t("profile.portfolio")}
             value={
               isBusiness
@@ -166,6 +180,7 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
             icon={isBusiness ? "list-outline" : "images-outline"}
           />
           <StatTile
+            compact={isCompactLayout}
             label={isBusiness ? t("profile.team") : t("profile.reviews")}
             value={
               isBusiness
@@ -214,7 +229,7 @@ function ProfessionalProfileSections({
 
   return (
     <>
-      <DashboardCard title={t("profile.professionalTools")}>
+      <PlainProfileSection title={t("profile.professionalTools")}>
         <ProviderProfileMenuItem
           icon="list-outline"
           label={t("profile.services")}
@@ -235,7 +250,7 @@ function ProfessionalProfileSections({
           })}
           onPress={() => router.push("/(provider)/dashboard")}
         />
-      </DashboardCard>
+      </PlainProfileSection>
 
       <AccountSection
         inviteMeta={t("profile.inviteProfessional")}
@@ -259,7 +274,7 @@ function BusinessProfileSections({
 
   return (
     <>
-      <DashboardCard title={t("profile.businessTools")}>
+      <PlainProfileSection title={t("profile.businessTools")}>
         <ProviderProfileMenuItem
           icon="people-outline"
           label={t("profile.team")}
@@ -292,7 +307,7 @@ function BusinessProfileSections({
           })}
           onPress={() => router.push("/(provider)/dashboard")}
         />
-      </DashboardCard>
+      </PlainProfileSection>
 
       <AccountSection
         inviteMeta={t("profile.invitePartnersStaff")}
@@ -315,7 +330,7 @@ function AccountSection({
   const { t } = useTranslation();
 
   return (
-    <DashboardCard title={t("profile.account")}>
+    <PlainProfileSection title={t("profile.account")}>
       <ProviderProfileMenuItem
         icon="card-outline"
         label={t("account.subscription")}
@@ -357,19 +372,36 @@ function AccountSection({
         }
         onPress={() => router.push("/updates")}
       />
-    </DashboardCard>
+    </PlainProfileSection>
+  );
+}
+
+function PlainProfileSection({
+  children,
+  title,
+}: {
+  children: ReactNode;
+  title: string;
+}) {
+  return (
+    <View style={styles.profileSection}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      <View style={styles.sectionDivider} />
+      <View style={styles.sectionItems}>{children}</View>
+    </View>
   );
 }
 
 type StatTileProps = {
+  compact?: boolean;
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
 };
 
-function StatTile({ icon, label, value }: StatTileProps) {
+function StatTile({ compact = false, icon, label, value }: StatTileProps) {
   return (
-    <View style={styles.statTile}>
+    <View style={[styles.statTile, compact ? styles.statTileCompact : null]}>
       <View style={styles.statIcon}>
         <Ionicons color={colors.primary} name={icon} size={18} />
       </View>
@@ -380,15 +412,14 @@ function StatTile({ icon, label, value }: StatTileProps) {
 }
 
 const styles = StyleSheet.create({
+  screenContent: {
+    paddingHorizontal: spacing.sm,
+  },
   profileCard: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
-    borderWidth: 1,
     flexDirection: "row",
     gap: spacing.md,
-    padding: spacing.md,
+    paddingVertical: spacing.xs,
   },
   pressed: {
     opacity: 0.72,
@@ -456,22 +487,22 @@ const styles = StyleSheet.create({
   },
   statusGrid: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: spacing.sm,
   },
   statTile: {
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    borderWidth: 1,
     flex: 1,
     gap: 4,
-    minHeight: 104,
-    padding: spacing.sm,
+    minWidth: 104,
+    minHeight: 86,
+    paddingVertical: spacing.xs,
+  },
+  statTileCompact: {
+    width: "100%",
   },
   statIcon: {
     alignItems: "center",
-    backgroundColor: colors.surfaceMuted,
     borderRadius: 18,
     height: 36,
     justifyContent: "center",
@@ -487,5 +518,20 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "700",
     textAlign: "center",
+  },
+  profileSection: {
+    gap: spacing.sm,
+  },
+  sectionTitle: {
+    color: colors.text,
+    fontSize: 17,
+    fontWeight: "600",
+  },
+  sectionDivider: {
+    backgroundColor: colors.border,
+    height: StyleSheet.hairlineWidth,
+  },
+  sectionItems: {
+    gap: spacing.sm,
   },
 });
