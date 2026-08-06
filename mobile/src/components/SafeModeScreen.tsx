@@ -1,11 +1,17 @@
 import { Ionicons } from "@expo/vector-icons";
 import type { TFunction } from "i18next";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, Text, View } from "react-native";
+import { Linking, Platform, StyleSheet, Text, View } from "react-native";
 import { BrandLogo } from "./BrandLogo";
 import { PrimaryButton } from "./PrimaryButton";
+import { VUTA_DOWNLOAD_URL } from "../constants/links";
 import { colors, radii, spacing } from "../constants/theme";
 import { AppSecurityConfig } from "../types/app-config";
+import {
+  getInstalledBuildNumber,
+  getRequiredMinimumBuild,
+} from "../utils/mobileBuild";
 
 type SafeModeScreenProps = {
   error?: string | null;
@@ -28,6 +34,27 @@ export function SafeModeScreen({
   security,
 }: SafeModeScreenProps) {
   const { t } = useTranslation();
+  const [downloadError, setDownloadError] = useState("");
+  const isForceUpdate = security.mode === "force_update";
+  const installedBuild = getInstalledBuildNumber();
+  const requiredBuild = getRequiredMinimumBuild(security);
+  const downloadUrl = `${VUTA_DOWNLOAD_URL}?platform=${
+    Platform.OS === "ios" ? "ios" : "android"
+  }`;
+
+  const openDownloadPage = async () => {
+    setDownloadError("");
+
+    try {
+      await Linking.openURL(downloadUrl);
+    } catch {
+      setDownloadError(
+        t("safeMode.downloadError", {
+          defaultValue: "Could not open the download page. Visit vuta.app/download.",
+        })
+      );
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -45,18 +72,56 @@ export function SafeModeScreen({
             {t("safeMode.incidentId", { id: security.incidentId })}
           </Text>
         ) : null}
+        {isForceUpdate && (installedBuild || requiredBuild) ? (
+          <Text style={styles.meta}>
+            {t("safeMode.buildInfo", {
+              current: installedBuild || "-",
+              defaultValue: "Installed build: {{current}} / Required: {{required}}",
+              required: requiredBuild || "-",
+            })}
+          </Text>
+        ) : null}
         {error ? <Text style={styles.error}>{error}</Text> : null}
-        <PrimaryButton
-          label={isLoading ? t("actions.checking") : t("actions.checkAgain")}
-          loading={isLoading}
-          onPress={onRetry}
-        />
+        {downloadError ? (
+          <Text style={styles.error}>{downloadError}</Text>
+        ) : null}
+        {isForceUpdate ? (
+          <View style={styles.actions}>
+            <PrimaryButton
+              label={t("safeMode.downloadUpdate", {
+                defaultValue: "Download update",
+              })}
+              onPress={openDownloadPage}
+              style={styles.actionButton}
+            />
+            <PrimaryButton
+              label={isLoading ? t("actions.checking") : t("actions.checkAgain")}
+              loading={isLoading}
+              onPress={onRetry}
+              style={styles.actionButton}
+              variant="secondary"
+            />
+          </View>
+        ) : (
+          <PrimaryButton
+            label={isLoading ? t("actions.checking") : t("actions.checkAgain")}
+            loading={isLoading}
+            onPress={onRetry}
+          />
+        )}
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  actionButton: {
+    width: "100%",
+  },
+  actions: {
+    gap: spacing.sm,
+    width: "100%",
+  },
   container: {
     alignItems: "center",
     backgroundColor: colors.background,

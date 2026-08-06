@@ -3,6 +3,11 @@ import axios from "axios";
 import { getApiErrorMessage } from "../services/api";
 import { getAppConfig } from "../services/appConfig.service";
 import { AppConfig, AppSecurityConfig } from "../types/app-config";
+import {
+  getInstalledBuildNumber,
+  getRequiredMinimumBuild,
+  isBuildBelowMinimum,
+} from "../utils/mobileBuild";
 
 const normalSecurity: AppSecurityConfig = {
   disabledFeatures: [],
@@ -15,6 +20,33 @@ const createNormalConfig = (): AppConfig => ({
     ...normalSecurity,
     disabledFeatures: [],
   },
+});
+
+const normalizeSecurity = (security: AppSecurityConfig): AppSecurityConfig => {
+  const normalizedSecurity = {
+    ...security,
+    disabledFeatures: security.disabledFeatures ?? [],
+  };
+  const installedBuild = getInstalledBuildNumber();
+  const requiredMinimumBuild = getRequiredMinimumBuild(normalizedSecurity);
+
+  if (!isBuildBelowMinimum(installedBuild, requiredMinimumBuild)) {
+    return normalizedSecurity;
+  }
+
+  return {
+    ...normalizedSecurity,
+    isBlockingMode: true,
+    message:
+      normalizedSecurity.message ||
+      "Please update Vuta to continue. This keeps your account protected.",
+    mode: "force_update",
+  };
+};
+
+const normalizeConfig = (config: AppConfig): AppConfig => ({
+  ...config,
+  security: normalizeSecurity(config.security),
 });
 
 const isMissingAppConfigRoute = (error: unknown) =>
@@ -41,7 +73,7 @@ export const useAppConfigStore = create<AppConfigState>((set) => ({
 
     try {
       const config = await getAppConfig();
-      set({ config, error: null });
+      set({ config: normalizeConfig(config), error: null });
     } catch (error) {
       if (shouldUseDevFallback(error)) {
         set({ config: createNormalConfig(), error: null });
@@ -70,7 +102,7 @@ export const useAppConfigStore = create<AppConfigState>((set) => ({
 
     try {
       const config = await getAppConfig();
-      set({ config, error: null });
+      set({ config: normalizeConfig(config), error: null });
     } catch (error) {
       if (shouldUseDevFallback(error)) {
         set({ config: createNormalConfig(), error: null });

@@ -34,6 +34,7 @@ import {
 import { ServiceSummary } from "../../src/types/marketplace";
 import { ProviderBooking } from "../../src/types/provider";
 import { formatMoney } from "../../src/utils/provider";
+import { getGridItemWidth } from "../../src/utils/responsiveGrid";
 
 type TopServiceMetric = {
   bookings: number;
@@ -290,6 +291,7 @@ export default function ProviderServicesScreen() {
     ? businessStatsQuery.isLoading
     : bookingsQuery.isLoading;
   const isCompactLayout = width < 380;
+  const statCardWidth = getGridItemWidth(width, 2);
 
   return (
     <Screen>
@@ -309,28 +311,28 @@ export default function ProviderServicesScreen() {
 
       <View style={styles.statsGrid}>
         <StatCard
-          compact={isCompactLayout}
           icon="list-outline"
           label="Total services"
           value={String(services.length)}
+          width={statCardWidth}
         />
         <StatCard
-          compact={isCompactLayout}
           icon="checkmark-circle-outline"
           label="Active"
           value={String(activeCount)}
+          width={statCardWidth}
         />
         <StatCard
-          compact={isCompactLayout}
           icon="calendar-outline"
           label="Bookings"
           value={String(bookingCount)}
+          width={statCardWidth}
         />
         <StatCard
-          compact={isCompactLayout}
           icon="pricetag-outline"
           label="Avg price"
           value={activeCount ? formatMoney(averagePrice, services[0]?.currency) : "0"}
+          width={statCardWidth}
         />
       </View>
 
@@ -545,18 +547,22 @@ const getTopServicesFromBookings = (
 };
 
 type StatCardProps = {
-  compact?: boolean;
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
+  width: number;
 };
 
-function StatCard({ compact = false, icon, label, value }: StatCardProps) {
+function StatCard({ icon, label, value, width }: StatCardProps) {
   return (
-    <View style={[styles.statCard, compact ? styles.statCardCompact : null]}>
-      <Ionicons color={colors.primary} name={icon} size={20} />
-      <Text style={styles.statValue}>{value}</Text>
-      <Text style={styles.statLabel}>{label}</Text>
+    <View style={[styles.statCard, { width }]}>
+      <Ionicons color={colors.primary} name={icon} size={18} />
+      <Text adjustsFontSizeToFit numberOfLines={1} style={styles.statValue}>
+        {value}
+      </Text>
+      <Text numberOfLines={1} style={styles.statLabel}>
+        {label}
+      </Text>
     </View>
   );
 }
@@ -581,7 +587,9 @@ function ServiceRow({ onDeactivate, onEdit, service }: ServiceRowProps) {
       )}
       <View style={styles.serviceCopy}>
         <View style={styles.serviceTitleRow}>
-          <Text style={styles.serviceName}>{service.name}</Text>
+          <Text numberOfLines={1} style={styles.serviceName}>
+            {service.name}
+          </Text>
           {isInactive ? (
             <View style={styles.inactivePill}>
               <Text style={styles.inactiveText}>Inactive</Text>
@@ -677,19 +685,13 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   statCard: {
-    flexBasis: "47%",
-    flexGrow: 1,
     gap: 4,
-    minWidth: 150,
+    minHeight: 72,
     paddingVertical: spacing.xs,
-  },
-  statCardCompact: {
-    flexBasis: "100%",
-    minWidth: "100%",
   },
   statValue: {
     color: colors.text,
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "900",
   },
   statLabel: {
@@ -805,6 +807,7 @@ const styles = StyleSheet.create({
   imagePickerCopy: {
     flex: 1,
     gap: 2,
+    minWidth: 0,
   },
   imagePickerTitle: {
     color: colors.text,
@@ -844,8 +847,8 @@ const styles = StyleSheet.create({
     borderTopColor: colors.border,
     borderTopWidth: 1,
     flexDirection: "row",
-    gap: spacing.md,
-    paddingTop: spacing.md,
+    gap: spacing.sm,
+    paddingTop: spacing.sm,
   },
   inactiveRow: {
     opacity: 0.68,
@@ -853,16 +856,16 @@ const styles = StyleSheet.create({
   rowImage: {
     backgroundColor: colors.surfaceMuted,
     borderRadius: radii.sm,
-    height: 54,
-    width: 54,
+    height: 48,
+    width: 48,
   },
   rowImageFallback: {
     alignItems: "center",
     backgroundColor: colors.surfaceMuted,
     borderRadius: radii.sm,
-    height: 54,
+    height: 48,
     justifyContent: "center",
-    width: 54,
+    width: 48,
   },
   rowImageText: {
     color: colors.primary,
@@ -872,16 +875,19 @@ const styles = StyleSheet.create({
   serviceCopy: {
     flex: 1,
     gap: 3,
+    minWidth: 0,
   },
   serviceTitleRow: {
     alignItems: "center",
     flexDirection: "row",
     flexWrap: "wrap",
     gap: spacing.xs,
+    minWidth: 0,
   },
   serviceName: {
     color: colors.text,
-    fontSize: 16,
+    flexShrink: 1,
+    fontSize: 15,
     fontWeight: "900",
   },
   inactivePill: {
@@ -906,23 +912,24 @@ const styles = StyleSheet.create({
   },
   serviceActions: {
     flexDirection: "row",
+    flexShrink: 0,
     gap: spacing.xs,
   },
   iconButton: {
     alignItems: "center",
     backgroundColor: colors.surfaceMuted,
     borderRadius: radii.sm,
-    height: 36,
+    height: 34,
     justifyContent: "center",
-    width: 36,
+    width: 34,
   },
   topServiceRow: {
     alignItems: "center",
     borderTopColor: colors.border,
     borderTopWidth: 1,
     flexDirection: "row",
-    gap: spacing.md,
-    paddingTop: spacing.md,
+    gap: spacing.sm,
+    paddingTop: spacing.sm,
   },
   rankBadge: {
     alignItems: "center",
@@ -940,6 +947,7 @@ const styles = StyleSheet.create({
   topServiceCopy: {
     flex: 1,
     gap: 2,
+    minWidth: 0,
   },
   topServiceName: {
     color: colors.text,
@@ -952,6 +960,7 @@ const styles = StyleSheet.create({
   },
   topServiceNumbers: {
     alignItems: "flex-end",
+    flexShrink: 0,
     gap: 2,
   },
   topServiceBookings: {

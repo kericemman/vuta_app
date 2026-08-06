@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { BackButton } from "../../../src/components/BackButton";
@@ -38,6 +39,7 @@ import {
   getLocationLabel,
   getServiceImage,
 } from "../../../src/utils/marketplace";
+import { getGridItemWidth } from "../../../src/utils/responsiveGrid";
 
 const timeSlots = [
   "09:00",
@@ -60,6 +62,7 @@ const toDateValue = (date: Date) => date.toISOString().slice(0, 10);
 
 export default function ClientServiceDetailsScreen() {
   const queryClient = useQueryClient();
+  const { width } = useWindowDimensions();
   const params = useLocalSearchParams<{ employeeId?: string; id?: string }>();
   const serviceId = Array.isArray(params.id) ? params.id[0] : params.id;
   const preselectedEmployeeId = Array.isArray(params.employeeId)
@@ -169,6 +172,7 @@ export default function ClientServiceDetailsScreen() {
       ),
     [providerServicesQuery.data, service?._id]
   );
+  const slotWidth = getGridItemWidth(width, 4);
   const supportedModes = useMemo<Array<Exclude<ServiceMode, "both">>>(() => {
     const mode = provider?.serviceMode || "both";
 
@@ -448,7 +452,11 @@ export default function ClientServiceDetailsScreen() {
               <Pressable
                 key={slot}
                 onPress={() => setSelectedTime(slot)}
-                style={[styles.slot, selected ? styles.selectedSlot : null]}
+                style={[
+                  styles.slot,
+                  { width: slotWidth },
+                  selected ? styles.selectedSlot : null,
+                ]}
               >
                 <Text
                   style={[
@@ -927,7 +935,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     minHeight: 44,
     justifyContent: "center",
-    width: "22.8%",
   },
   selectedSlot: {
     backgroundColor: colors.primary,

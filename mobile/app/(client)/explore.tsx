@@ -36,9 +36,9 @@ import {
   filterProviders,
   filterServices,
 } from "../../src/utils/marketplace";
+import { getGridItemWidth } from "../../src/utils/responsiveGrid";
 
 const EXPLORE_LIMIT = 20;
-const SCREEN_HORIZONTAL_PADDING = spacing.sm * 2;
 
 const openProviderDetails = (providerId: string) =>
   router.push({
@@ -116,8 +116,7 @@ export default function ExploreScreen() {
     setQuery("");
     setSelectedCategory(undefined);
   };
-  const providerCardWidth =
-    (width - SCREEN_HORIZONTAL_PADDING - spacing.sm) / 2;
+  const providerCardWidth = getGridItemWidth(width, 2);
 
   if (providersQuery.isLoading || servicesQuery.isLoading) {
     return (
@@ -293,7 +292,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: spacing.sm,
-    justifyContent: "space-between",
   },
   serviceRail: {
     flexDirection: "row",

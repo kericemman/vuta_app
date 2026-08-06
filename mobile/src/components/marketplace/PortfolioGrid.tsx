@@ -15,6 +15,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, radii, spacing } from "../../constants/theme";
 import { PortfolioImage } from "../../types/marketplace";
+import { getGridItemWidth } from "../../utils/responsiveGrid";
 
 type PortfolioGridProps = {
   emptyMessage?: string;
@@ -29,9 +30,9 @@ export function PortfolioGrid({
 }: PortfolioGridProps) {
   const { width } = useWindowDimensions();
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
-  const contentWidth = Math.max(280, width - spacing.md * 2);
+  const contentWidth = Math.max(280, width - spacing.sm * 2);
   const featuredHeight = Math.round(contentWidth * 0.72);
-  const imageSize = Math.floor((contentWidth - spacing.sm) / 2);
+  const imageSize = getGridItemWidth(width, 2);
   const selectedIndex = viewerIndex ?? 0;
   const featuredImage = images[0];
   const gridImages = images.slice(1);
@@ -227,8 +228,7 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
-    rowGap: spacing.sm,
+    gap: spacing.sm,
   },
   thumbnailCard: {
     backgroundColor: colors.surfaceMuted,

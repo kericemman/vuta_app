@@ -40,6 +40,7 @@ import {
   BusinessEmployeeStatus,
   ProviderAvailability,
 } from "../../src/types/provider";
+import { getGridItemWidth } from "../../src/utils/responsiveGrid";
 
 const roleOptions: Array<{ label: string; value: BusinessEmployeeRole }> = [
   { label: "Staff", value: "staff" },
@@ -359,6 +360,7 @@ export default function BusinessTeamScreen() {
     (employee) => employee.isBookable !== false
   );
   const isCompactLayout = width < 380;
+  const statCardWidth = getGridItemWidth(width, 2);
 
   return (
     <Screen>
@@ -383,16 +385,16 @@ export default function BusinessTeamScreen() {
 
       <View style={styles.statsGrid}>
         <StatCard
-          compact={isCompactLayout}
           icon="people-outline"
           label="Active staff"
           value={String(activeEmployees.length)}
+          width={statCardWidth}
         />
         <StatCard
-          compact={isCompactLayout}
           icon="calendar-outline"
           label="Bookable"
           value={String(bookableEmployees.length)}
+          width={statCardWidth}
         />
       </View>
 
@@ -687,18 +689,22 @@ function Chip({ label, onPress, selected }: ChipProps) {
 }
 
 type StatCardProps = {
-  compact?: boolean;
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
+  width: number;
 };
 
-function StatCard({ compact = false, icon, label, value }: StatCardProps) {
+function StatCard({ icon, label, value, width }: StatCardProps) {
   return (
-    <View style={[styles.statCard, compact ? styles.statCardCompact : null]}>
-      <Ionicons color={colors.primary} name={icon} size={20} />
-      <Text style={styles.statValue}>{value}</Text>
-      <Text style={styles.statLabel}>{label}</Text>
+    <View style={[styles.statCard, { width }]}>
+      <Ionicons color={colors.primary} name={icon} size={18} />
+      <Text adjustsFontSizeToFit numberOfLines={1} style={styles.statValue}>
+        {value}
+      </Text>
+      <Text numberOfLines={1} style={styles.statLabel}>
+        {label}
+      </Text>
     </View>
   );
 }
@@ -822,18 +828,13 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   statCard: {
-    flex: 1,
     gap: 4,
-    minWidth: 150,
+    minHeight: 72,
     paddingVertical: spacing.xs,
-  },
-  statCardCompact: {
-    flexBasis: "100%",
-    minWidth: "100%",
   },
   statValue: {
     color: colors.text,
-    fontSize: 24,
+    fontSize: 21,
     fontWeight: "900",
   },
   statLabel: {
@@ -872,6 +873,7 @@ const styles = StyleSheet.create({
   imagePickerCopy: {
     flex: 1,
     gap: 2,
+    minWidth: 0,
   },
   imagePickerTitle: {
     color: colors.text,
@@ -1059,25 +1061,25 @@ const styles = StyleSheet.create({
     borderTopColor: colors.border,
     borderTopWidth: 1,
     flexDirection: "row",
-    gap: spacing.md,
-    paddingTop: spacing.md,
+    gap: spacing.sm,
+    paddingTop: spacing.sm,
   },
   inactiveRow: {
     opacity: 0.65,
   },
   avatar: {
     backgroundColor: colors.surfaceMuted,
-    borderRadius: 27,
-    height: 54,
-    width: 54,
+    borderRadius: 24,
+    height: 48,
+    width: 48,
   },
   avatarFallback: {
     alignItems: "center",
     backgroundColor: colors.surfaceMuted,
-    borderRadius: 27,
-    height: 54,
+    borderRadius: 24,
+    height: 48,
     justifyContent: "center",
-    width: 54,
+    width: 48,
   },
   avatarText: {
     color: colors.primary,
@@ -1087,21 +1089,24 @@ const styles = StyleSheet.create({
   employeeCopy: {
     flex: 1,
     gap: 2,
+    minWidth: 0,
   },
   employeeTitleRow: {
     alignItems: "center",
     flexDirection: "row",
     gap: spacing.xs,
+    minWidth: 0,
   },
   employeeName: {
     color: colors.text,
     flex: 1,
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "900",
   },
   statusPill: {
     backgroundColor: colors.surfaceMuted,
     borderRadius: 999,
+    flexShrink: 0,
     paddingHorizontal: spacing.sm,
     paddingVertical: 3,
   },
@@ -1128,14 +1133,15 @@ const styles = StyleSheet.create({
   },
   rowActions: {
     flexDirection: "row",
+    flexShrink: 0,
     gap: spacing.xs,
   },
   iconButton: {
     alignItems: "center",
     backgroundColor: colors.surfaceMuted,
     borderRadius: radii.sm,
-    height: 36,
+    height: 34,
     justifyContent: "center",
-    width: 36,
+    width: 34,
   },
 });

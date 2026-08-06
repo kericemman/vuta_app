@@ -48,6 +48,7 @@
       [
         "expo-image-picker",
         {
+          "microphonePermission": false,
           "photosPermission": "Allow Vuta to access your photos so you can update your profile picture."
         }
       ],

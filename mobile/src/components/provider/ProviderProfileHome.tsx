@@ -30,6 +30,7 @@ import {
   getProfileCompletion,
   getProviderLocation,
 } from "../../utils/provider";
+import { getGridItemWidth } from "../../utils/responsiveGrid";
 import { ProviderProfileMenuItem } from "./ProviderProfileMenuItem";
 
 export function ProfessionalProfileHome() {
@@ -84,7 +85,7 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
   const editRoute = isBusiness
     ? "/(provider)/business-profile"
     : "/(provider)/professional-profile";
-  const isCompactLayout = width < 380;
+  const statTileWidth = getGridItemWidth(width, 3);
 
   const inviteFriend = async () => {
     await Share.share({
@@ -164,13 +165,12 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
       ) : (
         <View style={styles.statusGrid}>
           <StatTile
-            compact={isCompactLayout}
             label={t("profile.profileStrength")}
             value={`${completion}%`}
             icon="shield-checkmark-outline"
+            width={statTileWidth}
           />
           <StatTile
-            compact={isCompactLayout}
             label={isBusiness ? t("profile.services") : t("profile.portfolio")}
             value={
               isBusiness
@@ -178,9 +178,9 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
                 : String(profile.portfolio?.length || 0)
             }
             icon={isBusiness ? "list-outline" : "images-outline"}
+            width={statTileWidth}
           />
           <StatTile
-            compact={isCompactLayout}
             label={isBusiness ? t("profile.team") : t("profile.reviews")}
             value={
               isBusiness
@@ -188,6 +188,7 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
                 : String(profile.reviewCount || 0)
             }
             icon={isBusiness ? "people-outline" : "star-outline"}
+            width={statTileWidth}
           />
         </View>
       )}
@@ -393,20 +394,24 @@ function PlainProfileSection({
 }
 
 type StatTileProps = {
-  compact?: boolean;
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
+  width: number;
 };
 
-function StatTile({ compact = false, icon, label, value }: StatTileProps) {
+function StatTile({ icon, label, value, width }: StatTileProps) {
   return (
-    <View style={[styles.statTile, compact ? styles.statTileCompact : null]}>
+    <View style={[styles.statTile, { width }]}>
       <View style={styles.statIcon}>
         <Ionicons color={colors.primary} name={icon} size={18} />
       </View>
-      <Text style={styles.statValue}>{value}</Text>
-      <Text style={styles.statLabel}>{label}</Text>
+      <Text adjustsFontSizeToFit numberOfLines={1} style={styles.statValue}>
+        {value}
+      </Text>
+      <Text numberOfLines={2} style={styles.statLabel}>
+        {label}
+      </Text>
     </View>
   );
 }
@@ -492,25 +497,20 @@ const styles = StyleSheet.create({
   },
   statTile: {
     alignItems: "center",
-    flex: 1,
     gap: 4,
-    minWidth: 104,
-    minHeight: 86,
+    minHeight: 82,
     paddingVertical: spacing.xs,
-  },
-  statTileCompact: {
-    width: "100%",
   },
   statIcon: {
     alignItems: "center",
-    borderRadius: 18,
-    height: 36,
+    borderRadius: 16,
+    height: 32,
     justifyContent: "center",
-    width: 36,
+    width: 32,
   },
   statValue: {
     color: colors.text,
-    fontSize: 20,
+    fontSize: 19,
     fontWeight: "900",
   },
   statLabel: {

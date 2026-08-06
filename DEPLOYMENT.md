@@ -251,7 +251,53 @@ eas submit --platform ios
 eas submit --platform android
 ```
 
-## 7. Final Verification
+## 7. Mobile OTA Updates And Forced Updates
+
+For JavaScript, UI, copy, and non-native bug fixes, ship an over-the-air update:
+
+```bash
+cd mobile
+eas update --channel production --message "Describe the production update"
+```
+
+The app checks for EAS updates on launch and when it returns to the foreground. When an update is downloaded, users see an in-app restart prompt.
+
+Use preview before production when testing:
+
+```bash
+eas update --channel preview --message "Describe the preview update"
+```
+
+Important: because `mobile/app.json` uses `runtimeVersion.policy = appVersion`, an OTA update only reaches app builds with the same app version. If you change native code, permissions, Expo SDK, native libraries, app icons, splash config, or build settings, create a new EAS build instead of only using OTA.
+
+For critical releases, set minimum mobile builds on the backend and restart the API:
+
+```text
+APP_SECURITY_MODE=normal
+APP_MIN_ANDROID_BUILD=<minimum-android-version-code>
+APP_MIN_IOS_BUILD=<minimum-ios-build-number>
+```
+
+Fallback for both platforms:
+
+```text
+APP_MIN_MOBILE_BUILD=<minimum-build>
+```
+
+To immediately block old or unsafe builds:
+
+```text
+APP_SECURITY_MODE=force_update
+APP_SECURITY_MESSAGE=Please update Vuta to continue.
+```
+
+Users will see the update-required screen with a link to:
+
+```text
+https://vuta.app/download
+```
+
+## 8. Final Verification
 
 Run local checks before every production push:
 
@@ -266,9 +312,10 @@ npm run build
 
 cd ../mobile
 npx tsc --noEmit
+npx expo config --type public
 ```
 
-## 8. Recommended Deploy Order
+## 9. Recommended Deploy Order
 
 1. Push cleaned monorepo to GitHub.
 2. Deploy backend from `backend/`.
@@ -279,3 +326,4 @@ npx tsc --noEmit
 7. Build mobile preview with EAS.
 8. Test real registration, login, browsing, booking, image upload, notifications, and messages.
 9. Submit mobile production builds.
+10. Use `eas update --channel production` for future JS/UI fixes that do not require a new store build.

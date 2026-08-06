@@ -31,6 +31,14 @@ const getAppSecurityConfig = () => {
     incidentId: process.env.APP_INCIDENT_ID || "",
     isBlockingMode: BLOCKING_APP_MODES.includes(mode),
     message: process.env.APP_SECURITY_MESSAGE || defaultMessages[mode],
+    minAndroidBuild:
+      process.env.APP_MIN_ANDROID_BUILD ||
+      process.env.APP_MIN_MOBILE_BUILD ||
+      "",
+    minIosBuild:
+      process.env.APP_MIN_IOS_BUILD ||
+      process.env.APP_MIN_MOBILE_BUILD ||
+      "",
     minMobileBuild: process.env.APP_MIN_MOBILE_BUILD || "",
     mode,
     statusUrl: process.env.APP_STATUS_URL || "",

@@ -11,8 +11,7 @@ import { ProviderCard } from "../../src/components/marketplace/ProviderCard";
 import { Screen } from "../../src/components/Screen";
 import { colors, spacing } from "../../src/constants/theme";
 import { useSavedProviders } from "../../src/hooks/useSavedProviders";
-
-const SCREEN_HORIZONTAL_PADDING = spacing.md * 2;
+import { getGridItemWidth } from "../../src/utils/responsiveGrid";
 
 const openProviderDetails = (providerId: string) =>
   router.push({
@@ -23,8 +22,7 @@ const openProviderDetails = (providerId: string) =>
 export default function SavedScreen() {
   const { width } = useWindowDimensions();
   const { favourites, isLoading } = useSavedProviders();
-  const providerCardWidth =
-    (width - SCREEN_HORIZONTAL_PADDING - spacing.sm) / 2;
+  const providerCardWidth = getGridItemWidth(width, 2);
 
   if (isLoading) {
     return (
@@ -102,7 +100,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: spacing.sm,
-    justifyContent: "space-between",
   },
   savedSection: {
     gap: spacing.md,

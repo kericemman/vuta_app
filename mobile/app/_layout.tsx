@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack, usePathname, useSegments } from "expo-router";
 import { useEffect, useMemo } from "react";
 import { LoadingScreen } from "../src/components/LoadingScreen";
+import { OverTheAirUpdatePrompt } from "../src/components/OverTheAirUpdatePrompt";
 import { SafeModeScreen } from "../src/components/SafeModeScreen";
 import { useAppAccessBootstrap } from "../src/hooks/useAppAccessBootstrap";
 import { usePushNotificationRouting } from "../src/hooks/usePushNotificationRouting";
@@ -122,6 +123,7 @@ export default function RootLayout() {
         <RealtimeBridge />
         <NavigationHistoryBridge />
         <RootNavigator />
+        <OverTheAirUpdatePrompt />
       </QueryClientProvider>
     </VutaI18nProvider>
   );

@@ -25,6 +25,7 @@ import {
   uploadPortfolioImage,
 } from "../../src/services/provider.service";
 import { PortfolioImage } from "../../src/types/marketplace";
+import { getGridItemWidth } from "../../src/utils/responsiveGrid";
 
 export default function ProviderPortfolioScreen() {
   const queryClient = useQueryClient();
@@ -32,9 +33,7 @@ export default function ProviderPortfolioScreen() {
   const [caption, setCaption] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const galleryImageSize = Math.floor(
-    (screenWidth - spacing.lg * 2 - spacing.sm) / 2
-  );
+  const galleryImageSize = getGridItemWidth(screenWidth, 2);
 
   const profileQuery = useQuery({
     queryKey: ["provider-profile"],
@@ -266,8 +265,7 @@ const styles = StyleSheet.create({
   gallery: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
-    rowGap: spacing.sm,
+    gap: spacing.sm,
   },
   imageCard: {
     backgroundColor: colors.surfaceMuted,

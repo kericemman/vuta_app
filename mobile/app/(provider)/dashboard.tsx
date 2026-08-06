@@ -37,6 +37,7 @@ import {
   getProviderLocation,
   isToday,
 } from "../../src/utils/provider";
+import { getGridItemWidth } from "../../src/utils/responsiveGrid";
 
 export default function ProviderDashboardScreen() {
   const { width } = useWindowDimensions();
@@ -110,7 +111,8 @@ export default function ProviderDashboardScreen() {
   const location = getProviderLocation(profile, user);
   const firstName = displayName.split(" ")[0] || "there";
   const imageUrl = user?.profileImage || profile?.user?.profileImage;
-  const isCompactLayout = width < 380;
+  const metricCardWidth = getGridItemWidth(width, 3);
+  const halfCardWidth = getGridItemWidth(width, 2);
 
   const toggleAvailability = () => {
     if (!profile) {
@@ -230,22 +232,22 @@ export default function ProviderDashboardScreen() {
 
       <View style={styles.metricsGrid}>
         <MetricCard
-          compact={isCompactLayout}
           icon="calendar-outline"
           label="Today's bookings"
           value={String(summary.todayBookings)}
+          width={metricCardWidth}
         />
         <MetricCard
-          compact={isCompactLayout}
           icon="wallet-outline"
           label="Earnings today"
           value={formatMoney(summary.todayEarnings)}
+          width={metricCardWidth}
         />
         <MetricCard
-          compact={isCompactLayout}
           icon="person-add-outline"
           label="New requests"
           value={String(summary.pendingRequests)}
+          width={metricCardWidth}
         />
       </View>
 
@@ -309,55 +311,54 @@ export default function ProviderDashboardScreen() {
 
       <View style={styles.quickActions}>
         <QuickAction
-          compact={isCompactLayout}
           icon="add-circle-outline"
           label="Add Service"
           onPress={() => router.push("/(provider)/services")}
           primary
+          width={halfCardWidth}
         />
         <QuickAction
-          compact={isCompactLayout}
           icon="calendar-outline"
           label="Bookings"
           onPress={() => router.push("/(provider)/bookings")}
+          width={halfCardWidth}
         />
         <QuickAction
-          compact={isCompactLayout}
           icon={isBusiness ? "people-outline" : "images-outline"}
           label={isBusiness ? "Team" : "Portfolio"}
           onPress={() =>
             router.push(isBusiness ? "/(provider)/team" : "/(provider)/portfolio")
           }
+          width={halfCardWidth}
         />
         <QuickAction
-          compact={isCompactLayout}
           icon="person-outline"
           label="Profile"
           onPress={() => router.push("/(provider)/profile")}
+          width={halfCardWidth}
         />
       </View>
 
       <View style={styles.insightsGrid}>
         <InsightCard
-          compact={isCompactLayout}
           icon="star"
           label="Rating"
           value={(profile?.averageRating || 0).toFixed(1)}
+          width={halfCardWidth}
         />
         <InsightCard
-          compact={isCompactLayout}
           icon="chatbox-ellipses-outline"
           label="Reviews"
           value={String(profile?.reviewCount || 0)}
+          width={halfCardWidth}
         />
         <InsightCard
-          compact={isCompactLayout}
           icon="cut-outline"
           label="Active services"
           value={String(businessStats?.counts.activeServices ?? activeServices.length)}
+          width={halfCardWidth}
         />
         <InsightCard
-          compact={isCompactLayout}
           icon={isBusiness ? "people-outline" : "images-outline"}
           label={isBusiness ? "Bookable staff" : "Portfolio"}
           value={String(
@@ -365,6 +366,7 @@ export default function ProviderDashboardScreen() {
               ? businessStats?.counts.bookableEmployees || 0
               : profile?.portfolio?.length || 0
           )}
+          width={halfCardWidth}
         />
       </View>
     </Screen>
@@ -386,19 +388,21 @@ function getTimeGreeting() {
 }
 
 type MetricCardProps = {
-  compact?: boolean;
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
+  width: number;
 };
 
-function MetricCard({ compact = false, icon, label, value }: MetricCardProps) {
+function MetricCard({ icon, label, value, width }: MetricCardProps) {
   return (
-    <View style={[styles.metricCard, compact ? styles.fullWidthCard : null]}>
+    <View style={[styles.metricCard, { width }]}>
       <View style={styles.metricIcon}>
-        <Ionicons color={colors.primary} name={icon} size={20} />
+        <Ionicons color={colors.primary} name={icon} size={18} />
       </View>
-      <Text style={styles.metricLabel}>{label}</Text>
+      <Text numberOfLines={2} style={styles.metricLabel}>
+        {label}
+      </Text>
       <Text numberOfLines={1} adjustsFontSizeToFit style={styles.metricValue}>
         {value}
       </Text>
@@ -490,35 +494,39 @@ function BookingRow({ booking }: BookingRowProps) {
 }
 
 type QuickActionProps = {
-  compact?: boolean;
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   onPress: () => void;
   primary?: boolean;
+  width: number;
 };
 
 function QuickAction({
-  compact = false,
   icon,
   label,
   onPress,
   primary = false,
+  width,
 }: QuickActionProps) {
   return (
     <Pressable
       onPress={onPress}
       style={[
         styles.quickAction,
-        compact ? styles.fullWidthCard : null,
+        { width },
         primary ? styles.primaryAction : null,
       ]}
     >
       <Ionicons
         color={primary ? colors.surface : colors.primary}
         name={icon}
-        size={24}
+        size={21}
       />
-      <Text style={[styles.quickActionText, primary ? styles.primaryActionText : null]}>
+      <Text
+        adjustsFontSizeToFit
+        numberOfLines={1}
+        style={[styles.quickActionText, primary ? styles.primaryActionText : null]}
+      >
         {label}
       </Text>
     </Pressable>
@@ -526,18 +534,20 @@ function QuickAction({
 }
 
 type InsightCardProps = {
-  compact?: boolean;
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
+  width: number;
 };
 
-function InsightCard({ compact = false, icon, label, value }: InsightCardProps) {
+function InsightCard({ icon, label, value, width }: InsightCardProps) {
   return (
-    <View style={[styles.insightCard, compact ? styles.fullWidthCard : null]}>
-      <Ionicons color={colors.premium} name={icon} size={20} />
+    <View style={[styles.insightCard, { width }]}>
+      <Ionicons color={colors.premium} name={icon} size={18} />
       <Text style={styles.insightValue}>{value}</Text>
-      <Text style={styles.insightLabel}>{label}</Text>
+      <Text numberOfLines={2} style={styles.insightLabel}>
+        {label}
+      </Text>
     </View>
   );
 }
@@ -600,6 +610,7 @@ const styles = StyleSheet.create({
   statusRow: {
     alignItems: "center",
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: spacing.sm,
   },
   statusPill: {
@@ -691,31 +702,26 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: radii.md,
     borderWidth: 1,
-    flex: 1,
     gap: spacing.xs,
-    minWidth: 104,
-    minHeight: 128,
-    padding: spacing.sm,
-  },
-  fullWidthCard: {
-    width: "100%",
+    minHeight: 108,
+    padding: spacing.xs,
   },
   metricIcon: {
     alignItems: "center",
     backgroundColor: colors.surfaceMuted,
-    borderRadius: 18,
-    height: 36,
+    borderRadius: 16,
+    height: 32,
     justifyContent: "center",
-    width: 36,
+    width: 32,
   },
   metricLabel: {
     color: colors.muted,
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: 11,
+    lineHeight: 14,
   },
   metricValue: {
     color: colors.text,
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "900",
   },
   businessStatRow: {
@@ -756,6 +762,7 @@ const styles = StyleSheet.create({
   topServiceCopy: {
     flex: 1,
     gap: 2,
+    minWidth: 0,
   },
   topServiceTitle: {
     color: colors.muted,
@@ -770,6 +777,7 @@ const styles = StyleSheet.create({
   },
   topServiceMeta: {
     alignItems: "flex-end",
+    flexShrink: 0,
   },
   topServiceBookings: {
     color: colors.text,
@@ -806,6 +814,7 @@ const styles = StyleSheet.create({
   },
   bookingCopy: {
     flex: 1,
+    minWidth: 0,
   },
   bookingTitle: {
     color: colors.text,
@@ -842,10 +851,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: spacing.xs,
     justifyContent: "center",
-    minHeight: 88,
-    padding: spacing.sm,
-    minWidth: 150,
-    width: "48.5%",
+    minHeight: 78,
+    padding: spacing.xs,
   },
   primaryAction: {
     backgroundColor: colors.primary,
@@ -853,8 +860,9 @@ const styles = StyleSheet.create({
   },
   quickActionText: {
     color: colors.text,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "800",
+    textAlign: "center",
   },
   primaryActionText: {
     color: colors.surface,
@@ -871,14 +879,12 @@ const styles = StyleSheet.create({
     borderRadius: radii.md,
     borderWidth: 1,
     gap: 3,
-    minHeight: 90,
-    minWidth: 150,
-    padding: spacing.md,
-    width: "48.5%",
+    minHeight: 82,
+    padding: spacing.sm,
   },
   insightValue: {
     color: colors.text,
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "900",
   },
   insightLabel: {

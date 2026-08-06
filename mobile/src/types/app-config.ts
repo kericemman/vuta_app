@@ -9,6 +9,8 @@ export type AppSecurityConfig = {
   disabledFeatures: string[];
   incidentId?: string;
   isBlockingMode: boolean;
+  minAndroidBuild?: string;
+  minIosBuild?: string;
   message?: string;
   minMobileBuild?: string;
   mode: AppSecurityMode;
