@@ -2,6 +2,7 @@ const express = require("express");
 const { ROLES } = require("../constants/roles");
 const {
   createFeedback,
+  createPublicFeedback,
   deleteFeedback,
   listFeedback,
   updateFeedback,
@@ -13,6 +14,11 @@ const { feedbackSchemas } = require("../validators/schemas");
 
 const router = express.Router();
 
+router.post(
+  "/public",
+  validateRequest(feedbackSchemas.publicCreate),
+  createPublicFeedback
+);
 router.post("/", protect, validateRequest(feedbackSchemas.create), createFeedback);
 router.get(
   "/admin",

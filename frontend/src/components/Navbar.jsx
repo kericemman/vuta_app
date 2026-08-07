@@ -17,12 +17,6 @@ const Navbar = () => {
         </a>
 
         <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
-          <a href="/#how" className="transition hover:text-[#F26B5E]">
-            How it works
-          </a>
-          <a href="/#preview" className="transition hover:text-[#F26B5E]">
-            Preview
-          </a>
           <a href="/become-a-partner" className="transition hover:text-[#F26B5E]">
             Become a Partner
           </a>
@@ -31,6 +25,9 @@ const Navbar = () => {
           </a>
           <a href="/download" className="transition hover:text-[#F26B5E]">
             Download
+          </a>
+          <a href="/contact" className="transition hover:text-[#F26B5E]">
+            Contact
           </a>
         </nav>
 

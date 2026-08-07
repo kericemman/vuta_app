@@ -8,6 +8,7 @@ const rateLimit = require("express-rate-limit");
 
 const connectDB = require("./src/config/db");
 const adCardRoutes = require("./src/routes/adCardRoutes");
+const accountDeletionRequestRoutes = require("./src/routes/accountDeletionRequestRoutes");
 const appConfigRoutes = require("./src/routes/appConfigRoutes");
 const appUpdateRoutes = require("./src/routes/appUpdateRoutes");
 const authRoutes = require("./src/routes/authRoutes");
@@ -142,7 +143,12 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/bookings", sensitiveWriteLimiter, bookingRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/favourites", favouriteRoutes);
-app.use("/api/feedback", feedbackRoutes);
+app.use("/api/feedback", sensitiveWriteLimiter, feedbackRoutes);
+app.use(
+  "/api/account-deletion-requests",
+  sensitiveWriteLimiter,
+  accountDeletionRequestRoutes
+);
 app.use("/api/messages", messageRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/uploads", sensitiveWriteLimiter, uploadRoutes);

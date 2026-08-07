@@ -31,6 +31,11 @@ const statusTone = (status) => {
 };
 
 const roleFilterOptions = ["client", "beauty_professional", "beauty_business"];
+const sourceLabels = {
+  app: "Mobile app",
+  website_contact: "Website contact",
+  website_feedback: "Website feedback",
+};
 
 export default function FeedbackPage({
   feedback,
@@ -93,8 +98,8 @@ export default function FeedbackPage({
           </div>
         }
         eyebrow="Product"
-        subtitle="Review feedback from clients, professionals, and businesses."
-        title="App feedback"
+        subtitle="Review mobile app feedback, website contact messages, and hidden feedback submissions."
+        title="Feedback"
       />
       {status ? <ErrorText message={status} /> : null}
 
@@ -122,13 +127,24 @@ export default function FeedbackPage({
             {feedback.map((item) => (
               <tr className="border-b border-[#F3E8E1]" key={item._id}>
                 <td className="py-3 pr-4 align-top">
-                  <p className="font-bold">{item.user?.name || "Unknown user"}</p>
+                  <p className="font-bold">
+                    {item.user?.name || item.name || "Website visitor"}
+                  </p>
                   <p className="text-xs text-[#746A71]">
                     {roleLabels[item.role] || item.role}
                   </p>
                   <p className="text-xs text-[#746A71]">
-                    {item.user?.email || item.user?.phone || "No contact"}
+                    {item.user?.email ||
+                      item.user?.phone ||
+                      item.email ||
+                      item.phone ||
+                      "No contact"}
                   </p>
+                  {item.source ? (
+                    <p className="mt-1 text-xs font-bold text-[#741B5D]">
+                      {sourceLabels[item.source] || item.source}
+                    </p>
+                  ) : null}
                   {!item.contactConsent ? (
                     <p className="mt-1 text-xs font-bold text-[#B91C1C]">
                       No follow-up requested

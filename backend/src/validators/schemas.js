@@ -68,6 +68,13 @@ const requiredLegalConsent = z
     (value) => value === true || String(value).toLowerCase() === "true",
     "You must accept the Terms and Conditions, Privacy Policy, and User Agreement."
   );
+const requiredConfirmation = (message) =>
+  z
+    .any()
+    .refine(
+      (value) => value === true || String(value).toLowerCase() === "true",
+      message
+    );
 
 const paginationQuery = z.object({
   page: z.coerce.number().int().min(1).default(1),
@@ -634,6 +641,20 @@ const feedbackSchemas = {
       topic: z.enum(FEEDBACK_TOPICS),
     }),
   },
+  publicCreate: {
+    body: z.object({
+      acceptedLegalPolicies: requiredLegalConsent,
+      contactConsent: z.boolean().optional(),
+      email: z.string().trim().toLowerCase().email("Email is invalid.").max(120),
+      message: nonEmptyString("Message is required.").max(2000),
+      name: nonEmptyString("Name is required.").max(80),
+      phone: optionalLimitedString(30),
+      rating: z.coerce.number().int().min(1).max(5).optional(),
+      role: z.enum(PUBLIC_SIGNUP_ROLES),
+      source: z.enum(["website_contact", "website_feedback"]).default("website_feedback"),
+      topic: z.enum(FEEDBACK_TOPICS),
+    }),
+  },
   adminList: {
     query: paginationQuery.extend({
       role: z.enum(PUBLIC_SIGNUP_ROLES).optional(),
@@ -653,7 +674,24 @@ const feedbackSchemas = {
   },
 };
 
+const accountDeletionRequestSchemas = {
+  create: {
+    body: z.object({
+      acceptedLegalPolicies: requiredLegalConsent,
+      confirmOwnership: requiredConfirmation(
+        "You must confirm this account deletion request."
+      ),
+      email: z.string().trim().toLowerCase().email("Email is invalid.").max(120),
+      name: nonEmptyString("Name is required.").max(80),
+      phone: optionalLimitedString(30),
+      reason: optionalLimitedString(1000),
+      role: z.enum(PUBLIC_SIGNUP_ROLES),
+    }),
+  },
+};
+
 module.exports = {
+  accountDeletionRequestSchemas,
   adCardSchemas,
   appUpdateSchemas,
   authSchemas,
