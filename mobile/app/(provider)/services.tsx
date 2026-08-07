@@ -11,6 +11,7 @@ import {
   Text,
   useWindowDimensions,
   View,
+  type ViewStyle,
 } from "react-native";
 import { DashboardCard } from "../../src/components/DashboardCard";
 import { LogoLoader } from "../../src/components/BrandLogo";
@@ -34,7 +35,7 @@ import {
 import { ServiceSummary } from "../../src/types/marketplace";
 import { ProviderBooking } from "../../src/types/provider";
 import { formatMoney } from "../../src/utils/provider";
-import { getGridItemWidth } from "../../src/utils/responsiveGrid";
+import { getGridItemPercentWidth } from "../../src/utils/responsiveGrid";
 
 type TopServiceMetric = {
   bookings: number;
@@ -291,7 +292,7 @@ export default function ProviderServicesScreen() {
     ? businessStatsQuery.isLoading
     : bookingsQuery.isLoading;
   const isCompactLayout = width < 380;
-  const statCardWidth = getGridItemWidth(width, 2);
+  const statCardWidth = getGridItemPercentWidth(2);
 
   return (
     <Screen>
@@ -550,7 +551,7 @@ type StatCardProps = {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
-  width: number;
+  width: ViewStyle["width"];
 };
 
 function StatCard({ icon, label, value, width }: StatCardProps) {
@@ -682,7 +683,8 @@ const styles = StyleSheet.create({
   statsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: spacing.sm,
+    justifyContent: "space-between",
+    rowGap: spacing.sm,
   },
   statCard: {
     gap: 4,

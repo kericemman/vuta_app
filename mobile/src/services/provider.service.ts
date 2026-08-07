@@ -11,17 +11,16 @@ import {
 } from "../types/provider";
 import { ServiceSummary } from "../types/marketplace";
 import { api } from "./api";
+import {
+  appendPreparedImage,
+  prepareImageForUpload,
+  UploadImageAsset,
+} from "../utils/imageUpload";
 
 type ListResponse<T> = {
   count: number;
   data: T[];
   success: boolean;
-};
-
-type UploadImageAsset = {
-  fileName?: string | null;
-  mimeType?: string | null;
-  uri: string;
 };
 
 type PortfolioUploadResponse = {
@@ -151,22 +150,14 @@ export const uploadBusinessEmployeeImage = async (
   asset: UploadImageAsset
 ) => {
   const formData = new FormData();
-  const name = asset.fileName || `employee-${Date.now()}.jpg`;
-  const type = asset.mimeType || "image/jpeg";
+  const image = await prepareImageForUpload(asset, "employee");
 
-  formData.append("image", {
-    name,
-    type,
-    uri: asset.uri,
-  } as unknown as Blob);
+  appendPreparedImage(formData, "image", image);
 
   const response = await api.post<ApiResponse<BusinessEmployeeImageUploadResponse>>(
     `/uploads/business-employees/${employeeId}/image`,
     formData,
     {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
       timeout: 60000,
     }
   );
@@ -179,14 +170,9 @@ export const uploadPortfolioImage = async (
   caption?: string
 ) => {
   const formData = new FormData();
-  const name = asset.fileName || `portfolio-${Date.now()}.jpg`;
-  const type = asset.mimeType || "image/jpeg";
+  const image = await prepareImageForUpload(asset, "portfolio");
 
-  formData.append("image", {
-    name,
-    type,
-    uri: asset.uri,
-  } as unknown as Blob);
+  appendPreparedImage(formData, "image", image);
 
   if (caption?.trim()) {
     formData.append("caption", caption.trim());
@@ -196,9 +182,6 @@ export const uploadPortfolioImage = async (
     "/uploads/portfolio",
     formData,
     {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
       timeout: 60000,
     }
   );
@@ -211,22 +194,14 @@ export const uploadServiceImage = async (
   asset: UploadImageAsset
 ) => {
   const formData = new FormData();
-  const name = asset.fileName || `service-${Date.now()}.jpg`;
-  const type = asset.mimeType || "image/jpeg";
+  const image = await prepareImageForUpload(asset, "service");
 
-  formData.append("image", {
-    name,
-    type,
-    uri: asset.uri,
-  } as unknown as Blob);
+  appendPreparedImage(formData, "image", image);
 
   const response = await api.post<ApiResponse<ServiceImageUploadResponse>>(
     `/uploads/services/${serviceId}/image`,
     formData,
     {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
       timeout: 60000,
     }
   );

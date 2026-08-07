@@ -9,8 +9,8 @@ import {
   Share,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
+  type ViewStyle,
 } from "react-native";
 import { AppVersionText } from "../AppVersionText";
 import { DashboardCard } from "../DashboardCard";
@@ -30,7 +30,7 @@ import {
   getProfileCompletion,
   getProviderLocation,
 } from "../../utils/provider";
-import { getGridItemWidth } from "../../utils/responsiveGrid";
+import { getGridItemPercentWidth } from "../../utils/responsiveGrid";
 import { ProviderProfileMenuItem } from "./ProviderProfileMenuItem";
 
 export function ProfessionalProfileHome() {
@@ -46,7 +46,6 @@ type ProviderProfileHomeProps = {
 };
 
 function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
-  const { width } = useWindowDimensions();
   const { t } = useTranslation();
   const user = useAuthStore((state) => state.user);
   const updates = useUpdateUnreadCount();
@@ -85,7 +84,7 @@ function ProviderProfileHome({ kind }: ProviderProfileHomeProps) {
   const editRoute = isBusiness
     ? "/(provider)/business-profile"
     : "/(provider)/professional-profile";
-  const statTileWidth = getGridItemWidth(width, 3);
+  const statTileWidth = getGridItemPercentWidth(3);
 
   const inviteFriend = async () => {
     await Share.share({
@@ -397,7 +396,7 @@ type StatTileProps = {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
-  width: number;
+  width: ViewStyle["width"];
 };
 
 function StatTile({ icon, label, value, width }: StatTileProps) {
@@ -493,7 +492,8 @@ const styles = StyleSheet.create({
   statusGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: spacing.sm,
+    justifyContent: "space-between",
+    rowGap: spacing.sm,
   },
   statTile: {
     alignItems: "center",

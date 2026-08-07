@@ -1,6 +1,11 @@
 import { api } from "./api";
 import { ApiResponse } from "../types/api";
 import { User } from "../types/auth";
+import {
+  appendPreparedImage,
+  prepareImageForUpload,
+  UploadImageAsset,
+} from "../utils/imageUpload";
 
 export type UpdateMePayload = {
   area?: string;
@@ -24,12 +29,6 @@ type ProfileImageUploadResponse = {
   user: User;
 };
 
-type UploadImageAsset = {
-  fileName?: string | null;
-  mimeType?: string | null;
-  uri: string;
-};
-
 export const updateMeRequest = async (payload: UpdateMePayload) => {
   const response = await api.patch<ApiResponse<User>>("/users/me", payload);
 
@@ -42,22 +41,14 @@ export const deleteMeRequest = async () => {
 
 export const uploadProfileImageRequest = async (asset: UploadImageAsset) => {
   const formData = new FormData();
-  const name = asset.fileName || `profile-${Date.now()}.jpg`;
-  const type = asset.mimeType || "image/jpeg";
+  const image = await prepareImageForUpload(asset, "profile");
 
-  formData.append("image", {
-    name,
-    type,
-    uri: asset.uri,
-  } as unknown as Blob);
+  appendPreparedImage(formData, "image", image);
 
   const response = await api.post<ApiResponse<ProfileImageUploadResponse>>(
     "/uploads/profile-image",
     formData,
     {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
       timeout: 60000,
     }
   );

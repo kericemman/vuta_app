@@ -119,17 +119,13 @@ export function ProviderCard({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
-    borderColor: colors.border,
     borderRadius: radii.md,
-    borderWidth: 1,
     gap: 4,
     padding: spacing.sm,
     width: 150,
   },
   plainCard: {
     backgroundColor: "transparent",
-    borderColor: "transparent",
-    borderWidth: 0,
     paddingHorizontal: 0,
     paddingVertical: spacing.xs,
   },

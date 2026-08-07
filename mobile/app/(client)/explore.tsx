@@ -7,7 +7,6 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  useWindowDimensions,
   View,
 } from "react-native";
 import { LoadingScreen } from "../../src/components/LoadingScreen";
@@ -36,7 +35,7 @@ import {
   filterProviders,
   filterServices,
 } from "../../src/utils/marketplace";
-import { getGridItemWidth } from "../../src/utils/responsiveGrid";
+import { getGridItemPercentWidth } from "../../src/utils/responsiveGrid";
 
 const EXPLORE_LIMIT = 20;
 
@@ -47,7 +46,6 @@ const openProviderDetails = (providerId: string) =>
   });
 
 export default function ExploreScreen() {
-  const { width } = useWindowDimensions();
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>();
   const debouncedQuery = useDebouncedValue(query.trim());
@@ -116,7 +114,7 @@ export default function ExploreScreen() {
     setQuery("");
     setSelectedCategory(undefined);
   };
-  const providerCardWidth = getGridItemWidth(width, 2);
+  const providerCardWidth = getGridItemPercentWidth(2);
 
   if (providersQuery.isLoading || servicesQuery.isLoading) {
     return (
@@ -291,7 +289,8 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: spacing.sm,
+    justifyContent: "space-between",
+    rowGap: spacing.sm,
   },
   serviceRail: {
     flexDirection: "row",

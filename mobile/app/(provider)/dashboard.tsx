@@ -7,8 +7,8 @@ import {
   Pressable,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
+  type ViewStyle,
 } from "react-native";
 import { DashboardCard } from "../../src/components/DashboardCard";
 import { LogoLoader } from "../../src/components/BrandLogo";
@@ -37,10 +37,9 @@ import {
   getProviderLocation,
   isToday,
 } from "../../src/utils/provider";
-import { getGridItemWidth } from "../../src/utils/responsiveGrid";
+import { getGridItemPercentWidth } from "../../src/utils/responsiveGrid";
 
 export default function ProviderDashboardScreen() {
-  const { width } = useWindowDimensions();
   const queryClient = useQueryClient();
   const user = useAuthStore((state) => state.user);
   const isBusiness = user?.role === "beauty_business";
@@ -111,8 +110,8 @@ export default function ProviderDashboardScreen() {
   const location = getProviderLocation(profile, user);
   const firstName = displayName.split(" ")[0] || "there";
   const imageUrl = user?.profileImage || profile?.user?.profileImage;
-  const metricCardWidth = getGridItemWidth(width, 3);
-  const halfCardWidth = getGridItemWidth(width, 2);
+  const metricCardWidth = getGridItemPercentWidth(3);
+  const halfCardWidth = getGridItemPercentWidth(2);
 
   const toggleAvailability = () => {
     if (!profile) {
@@ -391,7 +390,7 @@ type MetricCardProps = {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
-  width: number;
+  width: ViewStyle["width"];
 };
 
 function MetricCard({ icon, label, value, width }: MetricCardProps) {
@@ -498,7 +497,7 @@ type QuickActionProps = {
   label: string;
   onPress: () => void;
   primary?: boolean;
-  width: number;
+  width: ViewStyle["width"];
 };
 
 function QuickAction({
@@ -537,7 +536,7 @@ type InsightCardProps = {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
-  width: number;
+  width: ViewStyle["width"];
 };
 
 function InsightCard({ icon, label, value, width }: InsightCardProps) {
@@ -695,7 +694,8 @@ const styles = StyleSheet.create({
   metricsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: spacing.sm,
+    justifyContent: "space-between",
+    rowGap: spacing.sm,
   },
   metricCard: {
     backgroundColor: colors.surface,
@@ -841,7 +841,8 @@ const styles = StyleSheet.create({
   quickActions: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: spacing.sm,
+    justifyContent: "space-between",
+    rowGap: spacing.sm,
   },
   quickAction: {
     alignItems: "center",
@@ -870,7 +871,8 @@ const styles = StyleSheet.create({
   insightsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: spacing.sm,
+    justifyContent: "space-between",
+    rowGap: spacing.sm,
   },
   insightCard: {
     alignItems: "center",

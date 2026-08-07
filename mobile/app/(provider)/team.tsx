@@ -12,6 +12,7 @@ import {
   TextInput,
   useWindowDimensions,
   View,
+  type ViewStyle,
 } from "react-native";
 import { DashboardCard } from "../../src/components/DashboardCard";
 import { LogoLoader } from "../../src/components/BrandLogo";
@@ -40,7 +41,7 @@ import {
   BusinessEmployeeStatus,
   ProviderAvailability,
 } from "../../src/types/provider";
-import { getGridItemWidth } from "../../src/utils/responsiveGrid";
+import { getGridItemPercentWidth } from "../../src/utils/responsiveGrid";
 
 const roleOptions: Array<{ label: string; value: BusinessEmployeeRole }> = [
   { label: "Staff", value: "staff" },
@@ -360,7 +361,7 @@ export default function BusinessTeamScreen() {
     (employee) => employee.isBookable !== false
   );
   const isCompactLayout = width < 380;
-  const statCardWidth = getGridItemWidth(width, 2);
+  const statCardWidth = getGridItemPercentWidth(2);
 
   return (
     <Screen>
@@ -692,7 +693,7 @@ type StatCardProps = {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
-  width: number;
+  width: ViewStyle["width"];
 };
 
 function StatCard({ icon, label, value, width }: StatCardProps) {
@@ -825,7 +826,8 @@ const styles = StyleSheet.create({
   statsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: spacing.sm,
+    justifyContent: "space-between",
+    rowGap: spacing.sm,
   },
   statCard: {
     gap: 4,

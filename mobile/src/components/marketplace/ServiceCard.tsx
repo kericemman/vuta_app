@@ -92,9 +92,7 @@ const styles = StyleSheet.create({
   card: {
     alignItems: "center",
     backgroundColor: colors.surface,
-    borderColor: colors.border,
     borderRadius: radii.md,
-    borderWidth: 1,
     flexDirection: "row",
     gap: spacing.sm,
     padding: spacing.sm,
@@ -158,7 +156,6 @@ const styles = StyleSheet.create({
   },
   savedButton: {
     backgroundColor: colors.primary,
-    borderColor: colors.primary,
   },
   disabledSaveButton: {
     opacity: 0.45,
